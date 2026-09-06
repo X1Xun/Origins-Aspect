@@ -34,7 +34,9 @@ public final class BlockActions {
     public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<DelayAction>> DELAY = REGISTRY.register("delay", () -> DelayAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<IfElseAction>> IF_ELSE = REGISTRY.register("if_else", () -> IfElseAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<IfElseListAction>> IF_ELSE_LIST = REGISTRY.register("if_else_list", () -> IfElseListAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<ForRangeAction>> FOR_RANGE = REGISTRY.register("for_range", () -> ForRangeAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<RegionApplyAction>> REGION_APPLY = REGISTRY.register("region_apply", () -> RegionApplyAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<RelativeOffsetAction>> RELATIVE_OFFSET = REGISTRY.register("relative_offset", () -> RelativeOffsetAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<SideAction>> SIDE = REGISTRY.register("side", () -> SideAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends BlockAction>, MapCodec<WhileAction>> WHILE = REGISTRY.register("while", () -> WhileAction.CODEC);
 }

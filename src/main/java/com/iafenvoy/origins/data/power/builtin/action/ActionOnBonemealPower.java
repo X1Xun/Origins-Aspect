@@ -59,7 +59,7 @@ public class ActionOnBonemealPower extends Power {
         PowerHelper.get(player).execute(ActionOnBonemealPower.class,
                 power -> power.blockCondition.test(event.getLevel(), event.getPos()),
                 (holder, power) -> {
-                    power.blockAction.execute(event.getLevel(), event.getPos(), Optional.empty());
+                    BlockAction.executeWithContext(power.blockAction, player, event.getLevel(), event.getPos(), Optional.empty());
                     power.selfAction.execute(player);
                 });
     }

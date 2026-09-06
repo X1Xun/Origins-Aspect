@@ -25,7 +25,7 @@ public class ActionWhenLightningStruckPower extends HasCooldownPower {
     private final EntityAction entityAction;
 
     public ActionWhenLightningStruckPower(BaseSettings settings, CooldownSettings cooldown,
-                                           BiEntityCondition bientityCondition, EntityAction entityAction) {
+                                          BiEntityCondition bientityCondition, EntityAction entityAction) {
         super(settings, cooldown);
         this.bientityCondition = bientityCondition;
         this.entityAction = entityAction;

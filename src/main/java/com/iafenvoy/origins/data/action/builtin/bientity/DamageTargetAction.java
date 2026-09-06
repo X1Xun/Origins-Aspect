@@ -4,7 +4,7 @@ import com.iafenvoy.origins.attachment.OriginDataHolder;
 import com.iafenvoy.origins.data.action.BiEntityAction;
 import com.iafenvoy.origins.util.codec.CombinedCodecs;
 import com.iafenvoy.origins.util.math.Modifier;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -15,11 +15,11 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record DamageTargetAction(Holder<DamageType> damageType, float amount,
+public record DamageTargetAction(Holder<DamageType> damageType, ResourceReference amount,
                                  List<Modifier> modifier) implements BiEntityAction {
     public static final MapCodec<DamageTargetAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             DamageType.CODEC.fieldOf("damage_type").forGetter(DamageTargetAction::damageType),
-            Codec.FLOAT.fieldOf("amount").forGetter(DamageTargetAction::amount),
+            ResourceReference.FLOAT_CODEC.fieldOf("amount").forGetter(DamageTargetAction::amount),
             CombinedCodecs.MODIFIER.fieldOf("modifier").forGetter(DamageTargetAction::modifier)
     ).apply(i, DamageTargetAction::new));
 
@@ -30,6 +30,6 @@ public record DamageTargetAction(Holder<DamageType> damageType, float amount,
 
     @Override
     public void execute(@NotNull Entity source, @NotNull Entity target) {
-        OriginDataHolder.optional(source).ifPresent(h -> target.hurt(new DamageSource(this.damageType, source), Modifier.applyModifiers(h, this.modifier, this.amount)));
+        OriginDataHolder.optional(source).ifPresent(h -> target.hurt(new DamageSource(this.damageType, source), Modifier.applyModifiers(h, this.modifier, this.amount.resolveFloat(source))));
     }
 }

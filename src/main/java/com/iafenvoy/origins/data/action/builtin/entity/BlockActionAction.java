@@ -21,6 +21,6 @@ public record BlockActionAction(BlockAction action) implements EntityAction {
 
     @Override
     public void execute(@NotNull Entity source) {
-        this.action.execute(source.level(), source.blockPosition(), Optional.empty());
+        BlockAction.executeWithContext(this.action, source, source.level(), source.blockPosition(), Optional.empty());
     }
 }

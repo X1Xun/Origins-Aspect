@@ -6,6 +6,7 @@ import com.iafenvoy.origins.data.action.BiEntityAction;
 import com.iafenvoy.origins.data.action.BlockAction;
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.data.condition.BiEntityCondition;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -48,7 +49,7 @@ public record RaycastAction(RaycastSettings settings, EntityAction beforeAction,
                 double offset = 0;
                 Vec3 hitPos = hitResult.getLocation();
                 if (commandInfo.commandHitOffset().isPresent()) {
-                    offset = commandInfo.commandHitOffset().get();
+                    offset = commandInfo.commandHitOffset().get().resolve(source);
                 } else {
                     if (hitResult instanceof BlockHitResult bhr)
                         if (bhr.getDirection() == Direction.DOWN)
@@ -69,15 +70,15 @@ public record RaycastAction(RaycastSettings settings, EntityAction beforeAction,
                 this.executeCommand(source, at, commandInfo.commandAtHit().get());
             }
             if (commandInfo.commandAlongRay().isPresent())
-                this.executeStepCommands(source, origin, hitResult.getLocation(), commandInfo.commandAlongRay().get(), commandInfo.commandStep());
+                this.executeStepCommands(source, origin, hitResult.getLocation(), commandInfo.commandAlongRay().get(), commandInfo.commandStep().resolve(source));
             if (hitResult instanceof BlockHitResult bhr)
-                actions.blockAction().execute(source.level(), bhr.getBlockPos(), Optional.of(bhr.getDirection()));
+                BlockAction.executeWithContext(actions.blockAction(), source, source.level(), bhr.getBlockPos(), Optional.of(bhr.getDirection()));
             if (hitResult instanceof EntityHitResult ehr)
                 actions.biEntityAction().execute(source, ehr.getEntity());
             actions.hitAction().execute(source);
         } else {
             if (commandInfo.commandAlongRay().isPresent() && !commandInfo.commandAlongRayOnlyOnHit())
-                this.executeStepCommands(source, origin, hitResult.getLocation(), commandInfo.commandAlongRay().get(), commandInfo.commandStep());
+                this.executeStepCommands(source, origin, hitResult.getLocation(), commandInfo.commandAlongRay().get(), commandInfo.commandStep().resolve(source));
             actions.missAction().execute(source);
         }
     }
@@ -89,13 +90,14 @@ public record RaycastAction(RaycastSettings settings, EntityAction beforeAction,
             this.executeCommand(entity, origin.add(direction.scale(current)), command);
     }
 
-    public record CommandInfo(Optional<String> commandAtHit, Optional<Double> commandHitOffset,
-                              Optional<String> commandAlongRay, double commandStep, boolean commandAlongRayOnlyOnHit) {
+    public record CommandInfo(Optional<String> commandAtHit, Optional<ResourceReference> commandHitOffset,
+                              Optional<String> commandAlongRay, ResourceReference commandStep,
+                              boolean commandAlongRayOnlyOnHit) {
         private static final MapCodec<CommandInfo> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
                 Codec.STRING.optionalFieldOf("command_at_hit").forGetter(CommandInfo::commandAtHit),
-                Codec.DOUBLE.optionalFieldOf("command_hit_offset").forGetter(CommandInfo::commandHitOffset),
+                ResourceReference.CODEC.optionalFieldOf("command_hit_offset").forGetter(CommandInfo::commandHitOffset),
                 Codec.STRING.optionalFieldOf("command_along_ray").forGetter(CommandInfo::commandAlongRay),
-                Codec.DOUBLE.optionalFieldOf("command_step", 1.0).forGetter(CommandInfo::commandStep),
+                ResourceReference.CODEC.optionalFieldOf("command_step", ResourceReference.number(1)).forGetter(CommandInfo::commandStep),
                 Codec.BOOL.optionalFieldOf("command_along_ray_only_on_hit", false).forGetter(CommandInfo::commandAlongRayOnlyOnHit)
         ).apply(instance, CommandInfo::new));
     }

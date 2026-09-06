@@ -66,8 +66,10 @@ public class ResourceComponent extends PowerComponent {
             this.checkCallback = false;
             this.min = power.getMinValue();
             this.max = power.getMaxValue();
-            if (this.value == this.min) power.getMinAction().execute(holder.getEntity());
-            if (this.value == this.max) power.getMaxAction().execute(holder.getEntity());
+            if (this.value == this.min && power.getMinAction() != null)
+                power.getMinAction().execute(holder.getEntity());
+            if (this.value == this.max && power.getMaxAction() != null)
+                power.getMaxAction().execute(holder.getEntity());
         }
     }
 

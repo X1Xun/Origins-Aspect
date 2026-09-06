@@ -16,6 +16,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalRef;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.effect.MobEffect;
@@ -34,9 +35,11 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 import java.util.List;
 import java.util.Optional;
@@ -139,6 +142,14 @@ public abstract class LivingEntityMixin extends Entity {
         if (PowerHelper.get(self).anyActive(PreventEntityCollisionPower.class, x -> x.getBiEntityCondition().test(self, target)) ||
                 PowerHelper.get(target).anyActive(PreventEntityCollisionPower.class, x -> x.getBiEntityCondition().test(target, self)))
             ci.cancel();
+    }
+
+    @ModifyArgs(method = "knockback", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(DDD)V"))
+    private void origins$modifyKnockback(Args args) {
+        LivingEntity self = this.origins$self();
+        args.set(0, ModifyKnockbackPower.modify(self, Direction.Axis.X, args.get(0)));
+        args.set(1, ModifyKnockbackPower.modify(self, Direction.Axis.Y, args.get(1)));
+        args.set(2, ModifyKnockbackPower.modify(self, Direction.Axis.Z, args.get(2)));
     }
 
     @ModifyReturnValue(method = "canBreatheUnderwater", at = @At("RETURN"))

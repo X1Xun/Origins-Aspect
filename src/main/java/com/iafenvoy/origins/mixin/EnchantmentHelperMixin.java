@@ -22,7 +22,7 @@ public class EnchantmentHelperMixin {
 
     @Inject(method = "getEnchantmentLevel(Lnet/minecraft/core/Holder;Lnet/minecraft/world/entity/LivingEntity;)I", at = @At("HEAD"))
     private static void origins$setEntityOnStackForLevelQuery(Holder<Enchantment> enchantment, LivingEntity entity, CallbackInfoReturnable<Integer> cir) {
-        for (EquipmentSlot slot : net.minecraft.world.entity.EquipmentSlot.values()) {
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
             ItemStack stack = entity.getItemBySlot(slot);
             if (!stack.isEmpty()) ((EntityLinkedItemStack) (Object) stack).origins$setEntity(entity);
         }

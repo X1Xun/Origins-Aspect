@@ -17,7 +17,7 @@ public class MultiplePower extends Power {
     public static final List<String> KNOWN_KEYS = List.of("type", "name", "description", "condition", "hidden", "loading_priority", "badges");
     public static final MapCodec<MultiplePower> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BaseSettings.CODEC.forGetter(Power::getSettings),
-            AnyMapCodec.create(KNOWN_KEYS, Power.DIRECT_CODEC).forGetter(MultiplePower::getPowers)
+            AnyMapCodec.create(KNOWN_KEYS, DIRECT_CODEC).forGetter(MultiplePower::getPowers)
     ).apply(i, MultiplePower::new));
     private final Map<String, Power> powers;
 

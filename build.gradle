@@ -17,7 +17,12 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
+configurations {
+    runtimeClasspath.extendsFrom localRuntime
+}
+
 repositories {
+    maven { url = "https://cursemaven.com" }
     maven { url = "https://api.modrinth.com/maven" }
     maven { url = "https://jitpack.io" }
     maven { url = "https://maven.theillusivec4.top/" }
@@ -113,18 +118,15 @@ sourceSets.main.resources { srcDir 'src/generated/resources' }
 // This configuration should be used instead of 'runtimeOnly' to declare
 // a dependency that will be present for runtime testing but that is
 // "optional", meaning it will not be pulled by dependents of this mod.
-configurations {
-    runtimeClasspath.extendsFrom localRuntime
-}
-
 dependencies {
-    implementation jarJar("maven.modrinth:integration:$integration_version")
+    implementation jarJar("curse.maven:integration-lib-1329917:6900366")
     implementation jarJar("maven.modrinth:AdditionalEntityAttributes:6oJLT6m7")
-    implementation jarJar("maven.modrinth:caelus:KsfI4QsR")
+    implementation jarJar("com.illusivesoulworks.caelus:caelus-neoforge:7.0.1+1.21.1")
+    implementation jarJar("net.objecthunter:exp4j:0.4.8")
 
-    implementation "maven.modrinth:jupiter:Jpcw76rq"
+    implementation "curse.maven:jupiter-1072905:7738312"
 
-    compileOnly "maven.modrinth:bedsheet:HbBAModY"
+    compileOnly "curse.maven:bedsheet-1193851:6425898"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

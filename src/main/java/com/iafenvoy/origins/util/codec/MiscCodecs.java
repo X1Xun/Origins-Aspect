@@ -16,6 +16,7 @@ import net.minecraft.world.item.crafting.Recipe;
 
 import java.util.Optional;
 import java.util.OptionalInt;
+import java.util.OptionalDouble;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -31,5 +32,9 @@ public final class MiscCodecs {
 
     public static MapCodec<OptionalInt> integer(String name) {
         return Codec.INT.optionalFieldOf(name).xmap(o -> o.map(OptionalInt::of).orElseGet(OptionalInt::empty), o -> o.isPresent() ? Optional.of(o.getAsInt()) : Optional.empty());
+    }
+
+    public static MapCodec<OptionalDouble> doubleValue(String name) {
+        return Codec.DOUBLE.optionalFieldOf(name).xmap(o -> o.map(OptionalDouble::of).orElseGet(OptionalDouble::empty), o -> o.isPresent() ? Optional.of(o.getAsDouble()) : Optional.empty());
     }
 }

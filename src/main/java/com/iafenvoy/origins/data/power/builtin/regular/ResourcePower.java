@@ -2,6 +2,7 @@ package com.iafenvoy.origins.data.power.builtin.regular;
 
 import com.iafenvoy.origins.attachment.OriginDataHolder;
 import com.iafenvoy.origins.data._common.HudRender;
+import com.iafenvoy.origins.data._common.helper.ResourceHelper;
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.data.power.HudRenderable;
 import com.iafenvoy.origins.data.power.Power;
@@ -16,16 +17,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.OptionalInt;
 
-public class ResourcePower extends Power implements HudRenderable {
+public class ResourcePower extends Power implements HudRenderable, ResourceHelper {
     public static final MapCodec<ResourcePower> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BaseSettings.CODEC.forGetter(Power::getSettings),
             Codec.INT.fieldOf("min").forGetter(ResourcePower::getMinValue),
             Codec.INT.fieldOf("max").forGetter(ResourcePower::getMaxValue),
             HudRender.CODEC.optionalFieldOf("hud_render").forGetter(ResourcePower::getHudRender),
+            HudRender.CODEC.optionalFieldOf("origins-math:hud_render").forGetter(power -> Optional.empty()),
             MiscCodecs.integer("start_value").forGetter(ResourcePower::getStartValue),
             EntityAction.optionalCodec("min_action").forGetter(ResourcePower::getMinAction),
             EntityAction.optionalCodec("max_action").forGetter(ResourcePower::getMaxAction)
-    ).apply(i, ResourcePower::new));
+    ).apply(i, (settings, min, max, hudRender, originsMathHudRender, startValue, minAction, maxAction) ->
+            new ResourcePower(settings, min, max, originsMathHudRender.or(() -> hudRender), startValue, minAction, maxAction)));
     private final int min;
     private final int max;
     private final Optional<HudRender> hudRender;

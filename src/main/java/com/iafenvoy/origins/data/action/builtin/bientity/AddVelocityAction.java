@@ -2,6 +2,7 @@ package com.iafenvoy.origins.data.action.builtin.bientity;
 
 import com.iafenvoy.origins.data.action.BiEntityAction;
 import com.iafenvoy.origins.util.math.Space;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -15,12 +16,13 @@ import org.joml.Vector3f;
 import java.util.Locale;
 import java.util.function.BiFunction;
 
-public record AddVelocityAction(float x, float y, float z, Reference reference, boolean client, boolean server,
+public record AddVelocityAction(ResourceReference x, ResourceReference y, ResourceReference z, Reference reference,
+                                boolean client, boolean server,
                                 boolean set) implements BiEntityAction {
     public static final MapCodec<AddVelocityAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.FLOAT.optionalFieldOf("x", 0F).forGetter(AddVelocityAction::x),
-            Codec.FLOAT.optionalFieldOf("y", 0F).forGetter(AddVelocityAction::y),
-            Codec.FLOAT.optionalFieldOf("z", 0F).forGetter(AddVelocityAction::z),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("x", ResourceReference.number(0)).forGetter(AddVelocityAction::x),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("y", ResourceReference.number(0)).forGetter(AddVelocityAction::y),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("z", ResourceReference.number(0)).forGetter(AddVelocityAction::z),
             Reference.CODEC.optionalFieldOf("reference", Reference.POSITION).forGetter(AddVelocityAction::reference),
             Codec.BOOL.optionalFieldOf("client", true).forGetter(AddVelocityAction::client),
             Codec.BOOL.optionalFieldOf("server", true).forGetter(AddVelocityAction::server),
@@ -36,7 +38,7 @@ public record AddVelocityAction(float x, float y, float z, Reference reference, 
     public void execute(@NotNull Entity source, @NotNull Entity target) {
         boolean isClient = target.level().isClientSide;
         if ((isClient && !this.client) || (!isClient && !this.server)) return;
-        Vector3f velocity = new Vector3f(this.x, this.y, this.z);
+        Vector3f velocity = new Vector3f(this.x.resolveFloat(source), this.y.resolveFloat(source), this.z.resolveFloat(source));
         Vec3 refVec = this.reference.apply(source, target);
         Space.transformVectorToBase(refVec, velocity, source.getYRot(), true);
         if (this.set) target.setDeltaMovement(new Vec3(velocity));

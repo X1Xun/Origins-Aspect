@@ -62,7 +62,7 @@ public class ActionOnWakeUpPower extends Power {
                 p -> p.blockCondition.test(player.level(), pos.get()),
                 (h, p) -> {
                     p.entityAction.execute(player);
-                    p.blockAction.execute(player.level(), pos.get(), Optional.of(player.getDirection()));
+                    BlockAction.executeWithContext(p.blockAction, player, player.level(), pos.get(), Optional.of(player.getDirection()));
                 });
     }
 }

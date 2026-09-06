@@ -1,5 +1,6 @@
 package com.iafenvoy.origins.data.power.builtin.modify;
 
+import com.iafenvoy.origins.accessor.EntityLinkedItemStack;
 import com.iafenvoy.origins.attachment.PowerHelper;
 import com.iafenvoy.origins.data._common.helper.ModifierPowerHelper;
 import com.iafenvoy.origins.data.condition.ItemCondition;
@@ -96,7 +97,7 @@ public class ModifyEnchantmentLevelPower extends Power implements ModifierPowerH
      */
     @Nullable
     private static LivingEntity getEntityFromStack(ItemStack stack) {
-        Entity entity = com.iafenvoy.origins.accessor.EntityLinkedItemStack.getEntity(stack);
+        Entity entity = EntityLinkedItemStack.getEntity(stack);
         if (entity instanceof LivingEntity le) return le;
         return null;
     }

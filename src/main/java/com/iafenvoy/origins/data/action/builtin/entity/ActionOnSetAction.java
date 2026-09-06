@@ -6,6 +6,7 @@ import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.data.condition.BiEntityCondition;
 import com.iafenvoy.origins.data.power.component.builtin.EntitySetComponent;
 import com.iafenvoy.origins.util.codec.WildcardCodec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -20,13 +21,13 @@ import java.util.List;
 import java.util.UUID;
 
 public record ActionOnSetAction(ResourceLocation set, BiEntityAction biEntityAction,
-                                BiEntityCondition biEntityCondition, int limit,
+                                BiEntityCondition biEntityCondition, ResourceReference limit,
                                 boolean reverse) implements EntityAction {
     public static final MapCodec<ActionOnSetAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             WildcardCodec.INSTANCE.fieldOf("set").forGetter(ActionOnSetAction::set),
             BiEntityAction.CODEC.fieldOf("bientity_action").forGetter(ActionOnSetAction::biEntityAction),
             BiEntityCondition.optionalCodec("bientity_condition").forGetter(ActionOnSetAction::biEntityCondition),
-            Codec.INT.optionalFieldOf("limit", 0).forGetter(ActionOnSetAction::limit),
+            ResourceReference.INT_CODEC.optionalFieldOf("limit", ResourceReference.number(0)).forGetter(ActionOnSetAction::limit),
             Codec.BOOL.optionalFieldOf("reverse", false).forGetter(ActionOnSetAction::reverse)
     ).apply(i, ActionOnSetAction::new));
 
@@ -40,7 +41,7 @@ public record ActionOnSetAction(ResourceLocation set, BiEntityAction biEntityAct
         if (!(source.level() instanceof ServerLevel serverLevel)) return;
         List<UUID> uuids = PowerHelper.get(source).getComponentHolder(this.set, EntitySetComponent.class).map(EntitySetComponent.SetHolder::getEntityUuids).orElse(new LinkedList<>());
         if (this.reverse) Collections.reverse(uuids);
-        int remain = this.limit;
+        int remain = Math.max(0, this.limit.resolveInt(source));
         for (UUID uuid : uuids) {
             if (remain <= 0) break;
             Entity entity = serverLevel.getEntity(uuid);

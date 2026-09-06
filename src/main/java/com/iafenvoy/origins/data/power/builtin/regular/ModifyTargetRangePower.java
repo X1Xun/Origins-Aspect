@@ -7,13 +7,18 @@ import com.iafenvoy.origins.data.power.Power;
 import com.iafenvoy.origins.util.math.Modifier;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import java.util.List;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.Mob;
+import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-/** Modifies the target-search range that matching mobs may use for this player. */
+/**
+ * Modifies the target-search range that matching mobs may use for this player.
+ */
 public final class ModifyTargetRangePower extends Power {
     public static final MapCodec<ModifyTargetRangePower> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BaseSettings.CODEC.forGetter(Power::getSettings),
@@ -29,8 +34,13 @@ public final class ModifyTargetRangePower extends Power {
         this.modifier = modifier;
     }
 
-    public EntityCondition mobCondition() { return this.mobCondition; }
-    public Modifier modifier() { return this.modifier; }
+    public EntityCondition mobCondition() {
+        return this.mobCondition;
+    }
+
+    public Modifier modifier() {
+        return this.modifier;
+    }
 
     public static double modify(Mob mob, Player player, double baseRange) {
         return OriginDataHolder.optional(player).map(holder -> {
@@ -45,10 +55,12 @@ public final class ModifyTargetRangePower extends Power {
 
     public static boolean canTarget(Mob mob, Entity target) {
         if (!(target instanceof Player player)) return true;
-        double base = mob.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.FOLLOW_RANGE);
+        double base = mob.getAttributeValue(Attributes.FOLLOW_RANGE);
         return mob.distanceToSqr(player) <= Math.pow(modify(mob, player, base), 2);
     }
 
     @Override
-    public @NotNull MapCodec<? extends Power> codec() { return CODEC; }
+    public @NotNull MapCodec<? extends Power> codec() {
+        return CODEC;
+    }
 }

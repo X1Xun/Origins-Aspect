@@ -1,7 +1,7 @@
 package com.iafenvoy.origins.data.action.builtin.item;
 
 import com.iafenvoy.origins.data.action.ItemAction;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.Entity;
@@ -9,9 +9,9 @@ import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record ConsumeAction(int amount) implements ItemAction {
+public record ConsumeAction(ResourceReference amount) implements ItemAction {
     public static final MapCodec<ConsumeAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.INT.optionalFieldOf("amount", 1).forGetter(ConsumeAction::amount)
+            ResourceReference.INT_CODEC.optionalFieldOf("amount", ResourceReference.number(1)).forGetter(ConsumeAction::amount)
     ).apply(i, ConsumeAction::new));
 
     @Override
@@ -21,6 +21,6 @@ public record ConsumeAction(int amount) implements ItemAction {
 
     @Override
     public void execute(@NotNull Level level, @NotNull Entity source, @NotNull SlotAccess access) {
-        access.get().shrink(this.amount);
+        access.get().shrink(this.amount.resolveInt(source));
     }
 }

@@ -36,8 +36,8 @@ public final class CombinedCodecs {
     public static final Codec<List<AttributeModifier>> ATTRIBUTE_MODIFIER = combineCodec(AttributeModifier.CODEC);
     public static final Codec<List<PositionedItemStackSettings>> POSITIONED_ITEM_STACK = combineCodec(PositionedItemStackSettings.COMBINED_CODEC);
     public static final Codec<List<EquipmentSlotGroup>> EQUIPMENT_SLOT_GROUP = combineCodec(EquipmentSlotGroup.CODEC);
-    public static final Codec<List<StatReference>> STAT_REFERENCE = CombinedCodecs.combineCodec(StatReference.CODEC);
-    public static final Codec<List<Holder<SoundEvent>>> SOUND = CombinedCodecs.combineCodec(SoundEvent.CODEC);
+    public static final Codec<List<StatReference>> STAT_REFERENCE = combineCodec(StatReference.CODEC);
+    public static final Codec<List<Holder<SoundEvent>>> SOUND = combineCodec(SoundEvent.CODEC);
 
     public static <T> Codec<List<T>> combineCodec(Codec<T> codec) {
         return Codec.either(codec, codec.listOf()).xmap(x -> x.map(List::of, l -> l), l -> l.size() == 1 ? Either.left(l.getFirst()) : Either.right(l));

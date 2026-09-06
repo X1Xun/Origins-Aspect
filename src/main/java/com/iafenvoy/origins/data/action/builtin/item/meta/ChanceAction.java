@@ -1,7 +1,7 @@
 package com.iafenvoy.origins.data.action.builtin.item.meta;
 
 import com.iafenvoy.origins.data.action.ItemAction;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.Entity;
@@ -9,10 +9,10 @@ import net.minecraft.world.entity.SlotAccess;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record ChanceAction(ItemAction action, float chance, ItemAction failAction) implements ItemAction {
+public record ChanceAction(ItemAction action, ResourceReference chance, ItemAction failAction) implements ItemAction {
     public static final MapCodec<ChanceAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             ItemAction.CODEC.fieldOf("action").forGetter(ChanceAction::action),
-            Codec.floatRange(0, 1).fieldOf("chance").forGetter(ChanceAction::chance),
+            ResourceReference.FLOAT_CODEC.fieldOf("chance").forGetter(ChanceAction::chance),
             ItemAction.optionalCodec("fail_action").forGetter(ChanceAction::failAction)
     ).apply(i, ChanceAction::new));
 
@@ -23,7 +23,7 @@ public record ChanceAction(ItemAction action, float chance, ItemAction failActio
 
     @Override
     public void execute(@NotNull Level level, @NotNull Entity source, @NotNull SlotAccess access) {
-        if (Math.random() < this.chance) this.action.execute(level, source, access);
+        if (Math.random() < this.chance.resolveFloat(source)) this.action.execute(level, source, access);
         else this.failAction.execute(level, source, access);
     }
 }

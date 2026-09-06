@@ -8,9 +8,11 @@ import com.iafenvoy.origins.data.action.NoOpAction;
 import com.iafenvoy.origins.data.action.builtin.bientity.AddToSetAction;
 import com.iafenvoy.origins.data.action.builtin.bientity.AddVelocityAction;
 import com.iafenvoy.origins.data.action.builtin.bientity.CopyOriginAction;
+import com.iafenvoy.origins.data.action.builtin.bientity.CopyResourceValueAction;
 import com.iafenvoy.origins.data.action.builtin.bientity.DamageTargetAction;
 import com.iafenvoy.origins.data.action.builtin.bientity.RemoveFromSetAction;
 import com.iafenvoy.origins.data.action.builtin.bientity.TeleportAction;
+import com.iafenvoy.origins.data.action.builtin.bientity.VariableExecuteCommandAction;
 import com.iafenvoy.origins.data.action.builtin.bientity.meta.*;
 import com.iafenvoy.origins.network.payload.MountPlayerS2CPayload;
 import com.mojang.serialization.MapCodec;
@@ -33,6 +35,7 @@ public final class BiEntityActions {
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<AddToSetAction>> ADD_TO_SET = REGISTRY.register("add_to_set", () -> AddToSetAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<AddVelocityAction>> ADD_VELOCITY = REGISTRY.register("add_velocity", () -> AddVelocityAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<CopyOriginAction>> COPY_ORIGIN = REGISTRY.register("copy_origin", () -> CopyOriginAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<CopyResourceValueAction>> COPY_RESOURCE_VALUE = REGISTRY.register("copy_resource_value", () -> CopyResourceValueAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<DamageTargetAction>> DAMAGE_TARGET = REGISTRY.register("damage_target", () -> DamageTargetAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<? extends BiEntityAction>> MOUNT = REGISTRY.register("mount", () -> createBiEntity((source, target) -> {
         if (source.level().isClientSide) return;
@@ -42,6 +45,7 @@ public final class BiEntityActions {
     }));
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<RemoveFromSetAction>> REMOVE_FROM_SET = REGISTRY.register("remove_from_set", () -> RemoveFromSetAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<TeleportAction>> TELEPORT = REGISTRY.register("teleport", () -> TeleportAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<VariableExecuteCommandAction>> VARIABLE_EXECUTE_COMMAND = REGISTRY.register("variable_execute_command", () -> VariableExecuteCommandAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<? extends BiEntityAction>> SET_IN_LOVE = REGISTRY.register("set_in_love", () -> createBiEntity((Entity source, Entity target) -> {
         if (target instanceof Animal animal) animal.setInLove(source instanceof Player player ? player : null);
     }));
@@ -56,8 +60,10 @@ public final class BiEntityActions {
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<DelayAction>> DELAY = REGISTRY.register("delay", () -> DelayAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<IfElseAction>> IF_ELSE = REGISTRY.register("if_else", () -> IfElseAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<IfElseListAction>> IF_ELSE_LIST = REGISTRY.register("if_else_list", () -> IfElseListAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<ForRangeAction>> FOR_RANGE = REGISTRY.register("for_range", () -> ForRangeAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<SideAction>> SIDE = REGISTRY.register("side", () -> SideAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<InvertAction>> INVERT = REGISTRY.register("invert", () -> InvertAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<SourceActionAction>> SOURCE_ACTION = REGISTRY.register("source_action", () -> SourceActionAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<TargetActionAction>> TARGET_ACTION = REGISTRY.register("target_action", () -> TargetActionAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends BiEntityAction>, MapCodec<WhileAction>> WHILE = REGISTRY.register("while", () -> WhileAction.CODEC);
 }

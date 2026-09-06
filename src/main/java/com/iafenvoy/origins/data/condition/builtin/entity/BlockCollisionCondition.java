@@ -1,7 +1,7 @@
 package com.iafenvoy.origins.data.condition.builtin.entity;
 
 import com.iafenvoy.origins.data.condition.EntityCondition;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -11,11 +11,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 
-public record BlockCollisionCondition(float offsetX, float offsetY, float offsetZ) implements EntityCondition {
+public record BlockCollisionCondition(ResourceReference offsetX, ResourceReference offsetY,
+                                      ResourceReference offsetZ) implements EntityCondition {
     public static final MapCodec<BlockCollisionCondition> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.FLOAT.optionalFieldOf("offset_x", 0F).forGetter(BlockCollisionCondition::offsetX),
-            Codec.FLOAT.optionalFieldOf("offset_y", 0F).forGetter(BlockCollisionCondition::offsetY),
-            Codec.FLOAT.optionalFieldOf("offset_z", 0F).forGetter(BlockCollisionCondition::offsetZ)
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("offset_x", ResourceReference.number(0)).forGetter(BlockCollisionCondition::offsetX),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("offset_y", ResourceReference.number(0)).forGetter(BlockCollisionCondition::offsetY),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("offset_z", ResourceReference.number(0)).forGetter(BlockCollisionCondition::offsetZ)
     ).apply(i, BlockCollisionCondition::new));
 
     @Override
@@ -26,7 +27,7 @@ public record BlockCollisionCondition(float offsetX, float offsetY, float offset
     @Override
     public boolean test(@NotNull Entity entity) {
         Level level = entity.level();
-        AABB bb = entity.getBoundingBox().move(this.offsetX, this.offsetY, this.offsetZ).deflate(0.001);
+        AABB bb = entity.getBoundingBox().move(this.offsetX.resolveFloat(entity), this.offsetY.resolveFloat(entity), this.offsetZ.resolveFloat(entity)).deflate(0.001);
         BlockPos min = BlockPos.containing(bb.minX, bb.minY, bb.minZ);
         BlockPos max = BlockPos.containing(bb.maxX, bb.maxY, bb.maxZ);
         for (BlockPos pos : BlockPos.betweenClosed(min, max)) {

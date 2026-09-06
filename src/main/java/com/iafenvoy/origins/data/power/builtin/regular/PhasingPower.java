@@ -145,7 +145,7 @@ public class PhasingPower extends Power {
         @SubscribeEvent
         public static void renderFog(ViewportEvent.RenderFog event) {
             if (event.getCamera().getEntity() instanceof LivingEntity living) {
-                Optional<Float> renderMethod = PhasingPower.getRenderMethod(living, PhasingRenderType.BLINDNESS);
+                Optional<Float> renderMethod = getRenderMethod(living, PhasingRenderType.BLINDNESS);
                 if (renderMethod.isPresent() && getInWallBlockState(living) != null) {
                     float view = renderMethod.get();
                     float s;

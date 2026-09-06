@@ -28,6 +28,8 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ConduitPowerOnLandPower>> CONDUIT_POWER_ON_LAND = REGISTRY.register("conduit_power_on_land", () -> ConduitPowerOnLandPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<CreativeFlightPower>> CREATIVE_FLIGHT = REGISTRY.register("creative_flight", () -> CreativeFlightPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<DamageOverTimePower>> DAMAGE_OVER_TIME = REGISTRY.register("damage_over_time", () -> DamageOverTimePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<DamageDealtLinkedResourcePower>> DAMAGE_DEALT_LINKED_RESOURCE = REGISTRY.register("damage_dealt_linked_resource", () -> DamageDealtLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<DamageTakenLinkedResourcePower>> DAMAGE_TAKEN_LINKED_RESOURCE = REGISTRY.register("damage_taken_linked_resource", () -> DamageTakenLinkedResourcePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<DisableRegenPower>> DISABLE_REGEN = REGISTRY.register("disable_regen", () -> DisableRegenPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<EdibleItemPower>> EDIBLE_ITEM = REGISTRY.register("edible_item", () -> EdibleItemPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<EffectImmunityPower>> EFFECT_IMMUNITY = REGISTRY.register("effect_immunity", () -> EffectImmunityPower.CODEC);
@@ -41,6 +43,7 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<FreezePower>> FREEZE = REGISTRY.register("freeze", () -> FreezePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<GroundedPower>> GROUNDED = REGISTRY.register("grounded", () -> GroundedPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<HoverPower>> HOVER = REGISTRY.register("hover", () -> HoverPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<HealingLinkedResourcePower>> HEALING_LINKED_RESOURCE = REGISTRY.register("healing_linked_resource", () -> HealingLinkedResourcePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<IgnoreWaterPower>> IGNORE_WATER = REGISTRY.register("ignore_water", () -> IgnoreWaterPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<InventoryPower>> INVENTORY = REGISTRY.register("inventory", () -> InventoryPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<InvisibilityPower>> INVISIBILITY = REGISTRY.register("invisibility", () -> InvisibilityPower.CODEC);
@@ -61,6 +64,17 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<RecipePower>> RECIPE = REGISTRY.register("recipe", () -> RecipePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ReplaceLootTablePower>> REPLACE_LOOT_TABLE = REGISTRY.register("replace_loot_table", () -> ReplaceLootTablePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ResourcePower>> RESOURCE = REGISTRY.register("resource", () -> ResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<AttributeLikeResourcePower>> ATTRIBUTE_LIKE_RESOURCE = REGISTRY.register("attribute_like_resource", () -> AttributeLikeResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<MathResourcePower>> MATH_RESOURCE = REGISTRY.register("math_resource", () -> MathResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifiableResourcePower>> MODIFIABLE_RESOURCE = REGISTRY.register("modifiable_resource", () -> ModifiableResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<NbtLinkedResourcePower>> NBT_LINKED_RESOURCE = REGISTRY.register("nbt_linked_resource", () -> NbtLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<OriginsMathLinkedPowers.PlayerLinkedResourcePower>> PLAYER_LINKED_RESOURCE = REGISTRY.register("player_linked_resource", () -> OriginsMathLinkedPowers.PlayerLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<OriginsMathLinkedPowers.LivingEntityLinkedResourcePower>> LIVING_ENTITY_LINKED_RESOURCE = REGISTRY.register("living_entity_linked_resource", () -> OriginsMathLinkedPowers.LivingEntityLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<OriginsMathLinkedPowers.AttributeLinkedResourcePower>> ATTRIBUTE_LINKED_RESOURCE = REGISTRY.register("attribute_linked_resource", () -> OriginsMathLinkedPowers.AttributeLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<OriginsMathLinkedPowers.CurrentBiomeLinkedResourcePower>> CURRENT_BIOME_LINKED_RESOURCE = REGISTRY.register("current_biome_linked_resource", () -> OriginsMathLinkedPowers.CurrentBiomeLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<OriginsMathLinkedPowers.StatusEffectLinkedResourcePower>> STATUS_EFFECT_LINKED_RESOURCE = REGISTRY.register("status_effect_linked_resource", () -> OriginsMathLinkedPowers.StatusEffectLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<OriginsMathLinkedPowers.ScoreboardLinkedResourcePower>> SCOREBOARD_LINKED_RESOURCE = REGISTRY.register("scoreboard_linked_resource", () -> OriginsMathLinkedPowers.ScoreboardLinkedResourcePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<VariableNbtLinkedResourcePower>> VARIABLE_NBT_LINKED_RESOURCE = REGISTRY.register("variable_nbt_linked_resource", () -> VariableNbtLinkedResourcePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<RestrictArmorPower>> RESTRICT_ARMOR = REGISTRY.register("restrict_armor", () -> RestrictArmorPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<RiptidePower>> RIPTIDE = REGISTRY.register("riptide", () -> RiptidePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ScareCreepersPower>> SCARE_CREEPERS = REGISTRY.register("scare_creepers", () -> ScareCreepersPower.CODEC);

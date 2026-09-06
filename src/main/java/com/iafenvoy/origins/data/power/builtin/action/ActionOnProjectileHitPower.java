@@ -40,13 +40,26 @@ public class ActionOnProjectileHitPower extends HasCooldownPower {
         this.ownerBientityCondition = ownerBientityCondition;
     }
 
-    public BiEntityAction getBiEntityAction() { return this.bientityAction; }
-    public BiEntityCondition getBiEntityCondition() { return this.bientityCondition; }
-    public BiEntityAction getOwnerBiEntityAction() { return this.ownerBientityAction; }
-    public BiEntityCondition getOwnerBiEntityCondition() { return this.ownerBientityCondition; }
+    public BiEntityAction getBiEntityAction() {
+        return this.bientityAction;
+    }
+
+    public BiEntityCondition getBiEntityCondition() {
+        return this.bientityCondition;
+    }
+
+    public BiEntityAction getOwnerBiEntityAction() {
+        return this.ownerBientityAction;
+    }
+
+    public BiEntityCondition getOwnerBiEntityCondition() {
+        return this.ownerBientityCondition;
+    }
 
     @Override
-    public @NotNull MapCodec<? extends Power> codec() { return CODEC; }
+    public @NotNull MapCodec<? extends Power> codec() {
+        return CODEC;
+    }
 
     @SubscribeEvent
     public static void onImpact(ProjectileImpactEvent event) {
@@ -59,8 +72,10 @@ public class ActionOnProjectileHitPower extends HasCooldownPower {
                 power -> power.bientityCondition.test(projectile, target)
                         || power.ownerBientityCondition.test(owner, target),
                 (holder, power) -> power.getCooldownComponent(holder).useIfReady(() -> {
-                    if (power.bientityCondition.test(projectile, target)) power.bientityAction.execute(projectile, target);
-                    if (power.ownerBientityCondition.test(owner, target)) power.ownerBientityAction.execute(owner, target);
+                    if (power.bientityCondition.test(projectile, target))
+                        power.bientityAction.execute(projectile, target);
+                    if (power.ownerBientityCondition.test(owner, target))
+                        power.ownerBientityAction.execute(owner, target);
                 }));
     }
 }

@@ -2,6 +2,7 @@ package com.iafenvoy.origins.data.power;
 
 import com.iafenvoy.origins.attachment.OriginDataHolder;
 import com.iafenvoy.origins.data._common.HudRender;
+import com.iafenvoy.origins.data._common.helper.ResourceHelper;
 import com.iafenvoy.origins.data.power.component.ComponentCollector;
 import com.iafenvoy.origins.data.power.component.builtin.CooldownComponent;
 import com.mojang.serialization.Codec;
@@ -10,7 +11,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 
 import java.util.Optional;
 
-public abstract class HasCooldownPower extends Power implements HudRenderable {
+public abstract class HasCooldownPower extends Power implements HudRenderable, ResourceHelper {
     private final CooldownSettings cooldown;
 
     protected HasCooldownPower(BaseSettings settings, CooldownSettings cooldown) {
@@ -70,7 +71,8 @@ public abstract class HasCooldownPower extends Power implements HudRenderable {
     public record CooldownSettings(int cooldown, Optional<HudRender> hudRender) {
         public static final MapCodec<CooldownSettings> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
                 Codec.INT.optionalFieldOf("cooldown", 1).forGetter(CooldownSettings::cooldown),
-                HudRender.CODEC.optionalFieldOf("hud_render").forGetter(CooldownSettings::hudRender)
-        ).apply(i, CooldownSettings::new));
+                HudRender.CODEC.optionalFieldOf("hud_render").forGetter(CooldownSettings::hudRender),
+                HudRender.CODEC.optionalFieldOf("origins-math:hud_render").forGetter(settings -> Optional.empty())
+        ).apply(i, (cooldown, hudRender, originsMathHudRender) -> new CooldownSettings(cooldown, originsMathHudRender.or(() -> hudRender))));
     }
 }

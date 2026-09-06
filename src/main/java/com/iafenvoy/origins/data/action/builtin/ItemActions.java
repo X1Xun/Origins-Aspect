@@ -31,5 +31,7 @@ public final class ItemActions {
     public static final DeferredHolder<MapCodec<? extends ItemAction>, MapCodec<DelayAction>> DELAY = REGISTRY.register("delay", () -> DelayAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends ItemAction>, MapCodec<IfElseAction>> IF_ELSE = REGISTRY.register("if_else", () -> IfElseAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends ItemAction>, MapCodec<IfElseListAction>> IF_ELSE_LIST = REGISTRY.register("if_else_list", () -> IfElseListAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends ItemAction>, MapCodec<ForRangeAction>> FOR_RANGE = REGISTRY.register("for_range", () -> ForRangeAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends ItemAction>, MapCodec<SideAction>> SIDE = REGISTRY.register("side", () -> SideAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends ItemAction>, MapCodec<WhileAction>> WHILE = REGISTRY.register("while", () -> WhileAction.CODEC);
 }

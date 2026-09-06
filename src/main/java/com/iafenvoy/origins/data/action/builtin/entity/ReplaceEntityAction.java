@@ -4,8 +4,10 @@ import com.iafenvoy.origins.data.action.EntityAction;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import java.util.List;
 import java.util.Optional;
+
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
@@ -14,7 +16,8 @@ import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public record ReplaceEntityAction(List<EntityType<?>> entityTypes, boolean random, Optional<CompoundTag> tag) implements EntityAction {
+public record ReplaceEntityAction(List<EntityType<?>> entityTypes, boolean random,
+                                  Optional<CompoundTag> tag) implements EntityAction {
     public static final MapCodec<ReplaceEntityAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().listOf().fieldOf("entity_types").forGetter(ReplaceEntityAction::entityTypes),
             Codec.BOOL.optionalFieldOf("random", false).forGetter(ReplaceEntityAction::random),

@@ -2,6 +2,7 @@ package com.iafenvoy.origins.data.condition.builtin.damage;
 
 import com.iafenvoy.origins.data.condition.DamageCondition;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;
 
@@ -16,6 +17,6 @@ public class FireDamageCondition implements DamageCondition {
 
     @Override
     public boolean test(@NotNull DamageSource source, float amount) {
-        return source.is(net.minecraft.tags.DamageTypeTags.IS_FIRE);
+        return source.is(DamageTypeTags.IS_FIRE);
     }
 }

@@ -347,7 +347,7 @@ public final class OriginDataHolder {
     @ApiStatus.Internal
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
-        OriginDataHolder.optional(event.getEntity()).ifPresent(OriginDataHolder::tick);
+        optional(event.getEntity()).ifPresent(OriginDataHolder::tick);
     }
 
     @ApiStatus.Internal
@@ -365,7 +365,7 @@ public final class OriginDataHolder {
     }
 
     private static void forEachPlayer(@NotNull ServerPlayer player) {
-        OriginDataHolder holder = OriginDataHolder.get(player);
+        OriginDataHolder holder = get(player);
         holder.sync();
         if (holder.hasAllOrigins()) return;
         holder.fillAutoChoosing();
@@ -391,7 +391,7 @@ public final class OriginDataHolder {
     public static void onGrantAdvancement(AdvancementEvent.AdvancementEarnEvent event) {
         Player player = event.getEntity();
         AdvancementHolder advancement = event.getAdvancement();
-        OriginDataHolder holder = OriginDataHolder.get(player);
+        OriginDataHolder holder = get(player);
         Map<Holder<Layer>, Origin.Upgrade> upgrades = new LinkedHashMap<>();
         for (Map.Entry<Holder<Layer>, Holder<Origin>> origin : holder.getOrigins().entrySet())
             for (Origin.Upgrade x : origin.getValue().value().upgrades())

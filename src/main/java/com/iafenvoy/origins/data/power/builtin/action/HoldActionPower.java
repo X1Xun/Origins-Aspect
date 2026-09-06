@@ -11,13 +11,17 @@ import com.iafenvoy.origins.data.power.Toggleable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import java.util.IdentityHashMap;
 import java.util.Map;
 import java.util.WeakHashMap;
+
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-/** Executes an action after holding an active key, with optional repeated actions while it remains held. */
+/**
+ * Executes an action after holding an active key, with optional repeated actions while it remains held.
+ */
 public final class HoldActionPower extends Power implements Toggleable {
     public static final MapCodec<HoldActionPower> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BaseSettings.CODEC.forGetter(Power::getSettings),
@@ -47,12 +51,29 @@ public final class HoldActionPower extends Power implements Toggleable {
         this.maxActions = Math.max(0, maxActions);
     }
 
-    public KeySettings configuredKey() { return this.configuredKey; }
-    public int holdDuration() { return this.holdDuration; }
-    public EntityAction chargedAction() { return this.chargedAction; }
-    public EntityAction entityAction() { return this.entityAction; }
-    public int interval() { return this.interval; }
-    public int maxActions() { return this.maxActions; }
+    public KeySettings configuredKey() {
+        return this.configuredKey;
+    }
+
+    public int holdDuration() {
+        return this.holdDuration;
+    }
+
+    public EntityAction chargedAction() {
+        return this.chargedAction;
+    }
+
+    public EntityAction entityAction() {
+        return this.entityAction;
+    }
+
+    public int interval() {
+        return this.interval;
+    }
+
+    public int maxActions() {
+        return this.maxActions;
+    }
 
     @Override
     public KeySettings getKey() {
@@ -102,7 +123,9 @@ public final class HoldActionPower extends Power implements Toggleable {
     }
 
     @Override
-    public @NotNull MapCodec<? extends Power> codec() { return CODEC; }
+    public @NotNull MapCodec<? extends Power> codec() {
+        return CODEC;
+    }
 
     private HoldState state(OriginDataHolder holder) {
         return HOLD_STATES.computeIfAbsent(holder, ignored -> new IdentityHashMap<>())
@@ -115,11 +138,13 @@ public final class HoldActionPower extends Power implements Toggleable {
         private long lastActionTick = -1;
         private int actions;
         private boolean charged;
+
         private void reset() {
             this.startTick = -1;
             this.lastInputTick = -1;
             this.lastActionTick = -1;
             this.actions = 0;
-            this.charged = false; }
+            this.charged = false;
+        }
     }
 }

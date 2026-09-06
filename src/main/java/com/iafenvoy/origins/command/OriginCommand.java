@@ -9,8 +9,6 @@ import com.iafenvoy.origins.data.origin.Origin;
 import com.iafenvoy.origins.data.origin.OriginRegistries;
 import com.iafenvoy.origins.util.HolderHelper;
 import com.iafenvoy.origins.util.RandomHelper;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.builder.ArgumentBuilder;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -49,15 +47,15 @@ public final class OriginCommand {
                                         .then(argument("origin", ResourceArgument.resource(context, OriginRegistries.ORIGIN_KEY))
                                                 .executes(OriginCommand::has)))))
                 .then(literal("gui")
-                        .executes(ctx -> OriginCommand.openGuiAll(ctx, true))
+                        .executes(ctx -> openGuiAll(ctx, true))
                         .then(argument("targets", EntityArgument.players())
-                                .executes(ctx -> OriginCommand.openGuiAll(ctx, false))
+                                .executes(ctx -> openGuiAll(ctx, false))
                                 .then(argument("layer", ResourceArgument.resource(context, LayerRegistries.LAYER_KEY))
                                         .executes(OriginCommand::openGuiSpecific))))
                 .then(literal("random")
-                        .executes(ctx -> OriginCommand.randomAll(ctx, true))
+                        .executes(ctx -> randomAll(ctx, true))
                         .then(argument("targets", EntityArgument.players())
-                                .executes(ctx -> OriginCommand.randomAll(ctx, false))
+                                .executes(ctx -> randomAll(ctx, false))
                                 .then(argument("layer", ResourceArgument.resource(context, LayerRegistries.LAYER_KEY))
                                         .executes(OriginCommand::randomSpecific))));
     }

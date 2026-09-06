@@ -14,6 +14,7 @@ public final class ModifyPowers {
 
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyAirSpeedPower>> MODIFY_AIR_SPEED = REGISTRY.register("modify_air_speed", () -> ModifyAirSpeedPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyAttributePower>> MODIFY_ATTRIBUTE = REGISTRY.register("modify_attribute", () -> ModifyAttributePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyAttributeLikeResourcePower>> MODIFY_ATTRIBUTE_LIKE_RESOURCE = REGISTRY.register("modify_attribute_like_resource", () -> ModifyAttributeLikeResourcePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyBlockRenderPower>> MODIFY_BLOCK_RENDER = REGISTRY.register("modify_block_render", () -> ModifyBlockRenderPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyBreakSpeedPower>> MODIFY_BREAK_SPEED = REGISTRY.register("modify_break_speed", () -> ModifyBreakSpeedPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyCameraSubmersionPower>> MODIFY_CAMERA_SUBMERSION = REGISTRY.register("modify_camera_submersion", () -> ModifyCameraSubmersionPower.CODEC);
@@ -37,8 +38,12 @@ public final class ModifyPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyHurtSoundPower>> MODIFY_HURT_SOUND = REGISTRY.register("modify_hurt_sound", () -> ModifyHurtSoundPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyInsomniaTicksPower>> MODIFY_INSOMNIA_TICKS = REGISTRY.register("modify_insomnia_ticks", () -> ModifyInsomniaTicksPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyJumpPower>> MODIFY_JUMP = REGISTRY.register("modify_jump", () -> ModifyJumpPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyKnockbackPower>> MODIFY_KNOCKBACK = REGISTRY.register("modify_knockback", () -> ModifyKnockbackPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyPlayerSpawnPower>> MODIFY_PLAYER_SPAWN = REGISTRY.register("modify_player_spawn", () -> ModifyPlayerSpawnPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyProjectileDamagePower>> MODIFY_PROJECTILE_DAMAGE = REGISTRY.register("modify_projectile_damage", () -> ModifyProjectileDamagePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyResourceMaximumPower>> MODIFY_RESOURCE_MAXIMUM = REGISTRY.register("modify_resource_maximum", () -> ModifyResourceMaximumPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyResourceMinimumPower>> MODIFY_RESOURCE_MINIMUM = REGISTRY.register("modify_resource_minimum", () -> ModifyResourceMinimumPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<SimpleModifyingPower>> MODIFY_SIMPLE = REGISTRY.register("modify_simple", () -> SimpleModifyingPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifySlipperinessPower>> MODIFY_SLIPPERINESS = REGISTRY.register("modify_slipperiness", () -> ModifySlipperinessPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyVelocityPower>> MODIFY_VELOCITY = REGISTRY.register("modify_velocity", () -> ModifyVelocityPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyXPGainPower>> MODIFY_XP_GAIN = REGISTRY.register("modify_xp_gain", () -> ModifyXPGainPower.CODEC);

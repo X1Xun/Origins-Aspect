@@ -31,6 +31,10 @@ public record Comparison(CompareOperation comparison, double compareTo) {
         return this.comparison.compare(current, this.compareTo);
     }
 
+    public boolean compare(double current, double given) {
+        return this.comparison.compare(current, given);
+    }
+
     public enum CompareOperation implements StringRepresentable {
         LESS_THAN("<", (a, b) -> a < b),
         LESS_THAN_OR_EQUAL("<=", (a, b) -> a <= b),

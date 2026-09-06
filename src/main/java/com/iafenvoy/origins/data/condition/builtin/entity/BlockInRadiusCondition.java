@@ -4,18 +4,18 @@ import com.iafenvoy.origins.data.condition.BlockCondition;
 import com.iafenvoy.origins.data.condition.EntityCondition;
 import com.iafenvoy.origins.util.math.Comparison;
 import com.iafenvoy.origins.util.math.Shape;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public record BlockInRadiusCondition(BlockCondition blockCondition, int radius, Shape shape,
+public record BlockInRadiusCondition(BlockCondition blockCondition, ResourceReference radius, Shape shape,
                                      Comparison comparison) implements EntityCondition {
     public static final MapCodec<BlockInRadiusCondition> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BlockCondition.optionalCodec("block_condition").forGetter(BlockInRadiusCondition::blockCondition),
-            Codec.INT.fieldOf("radius").forGetter(BlockInRadiusCondition::radius),
+            ResourceReference.INT_CODEC.fieldOf("radius").forGetter(BlockInRadiusCondition::radius),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(BlockInRadiusCondition::shape),
             Comparison.optionalCodec(Comparison.CompareOperation.GREATER_THAN_OR_EQUAL, 1).forGetter(BlockInRadiusCondition::comparison)
     ).apply(i, BlockInRadiusCondition::new));
@@ -28,7 +28,7 @@ public record BlockInRadiusCondition(BlockCondition blockCondition, int radius, 
     @Override
     public boolean test(@NotNull Entity entity) {
         int matches = 0;
-        for (BlockPos pos : this.shape.getBlocks(entity.blockPosition(), this.radius))
+        for (BlockPos pos : this.shape.getBlocks(entity.blockPosition(), Math.max(0, this.radius.resolveInt(entity))))
             if (this.blockCondition.test(entity.level(), pos))
                 ++matches;
         return this.comparison.compare(matches);

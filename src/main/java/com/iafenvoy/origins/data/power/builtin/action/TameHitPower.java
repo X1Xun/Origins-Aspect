@@ -1,5 +1,6 @@
 package com.iafenvoy.origins.data.power.builtin.action;
 
+import com.iafenvoy.origins.attachment.OriginDataHolder;
 import com.iafenvoy.origins.data.action.BiEntityAction;
 import com.iafenvoy.origins.data.condition.BiEntityCondition;
 import com.iafenvoy.origins.data.condition.DamageCondition;
@@ -23,7 +24,7 @@ abstract class TameHitPower extends HasCooldownPower {
         this.ownerBientityCondition = ownerBientityCondition;
     }
 
-    protected static <T extends TameHitPower> void execute(T power, com.iafenvoy.origins.attachment.OriginDataHolder holder, Entity actor, Entity target, Entity ownerActor, Entity ownerTarget, DamageSource source, float amount) {
+    protected static <T extends TameHitPower> void execute(T power, OriginDataHolder holder, Entity actor, Entity target, Entity ownerActor, Entity ownerTarget, DamageSource source, float amount) {
         if (power.damageCondition.test(source, amount) && power.bientityCondition.test(actor, target) && power.ownerBientityCondition.test(ownerActor, ownerTarget)) {
             power.getCooldownComponent(holder).useIfReady(() -> {
                 power.bientityAction.execute(actor, target);

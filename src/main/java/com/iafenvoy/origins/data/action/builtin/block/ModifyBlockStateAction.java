@@ -3,6 +3,7 @@ package com.iafenvoy.origins.data.action.builtin.block;
 import com.iafenvoy.origins.data.action.BlockAction;
 import com.iafenvoy.origins.util.codec.MiscCodecs;
 import com.iafenvoy.origins.util.math.ResourceOperation;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.iafenvoy.origins.util.wrapper.OptionalBoolean;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
@@ -16,18 +17,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.OptionalInt;
 
-public record ModifyBlockStateAction(String property, ResourceOperation operation, OptionalInt change,
+public record ModifyBlockStateAction(String property, ResourceOperation operation, Optional<ResourceReference> change,
                                      OptionalBoolean value, Optional<String> enumValue,
                                      boolean cycle) implements BlockAction {
     public static final MapCodec<ModifyBlockStateAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.fieldOf("property").forGetter(ModifyBlockStateAction::property),
             ResourceOperation.CODEC.optionalFieldOf("operation", ResourceOperation.ADD).forGetter(ModifyBlockStateAction::operation),
-            MiscCodecs.integer("change").forGetter(ModifyBlockStateAction::change),
+            ResourceReference.INT_CODEC.optionalFieldOf("change").forGetter(ModifyBlockStateAction::change),
             MiscCodecs.bool("value").forGetter(ModifyBlockStateAction::value),
             Codec.STRING.optionalFieldOf("enum").forGetter(ModifyBlockStateAction::enumValue),
-            Codec.BOOL.optionalFieldOf("change", false).forGetter(ModifyBlockStateAction::cycle)
+            Codec.BOOL.optionalFieldOf("cycle", false).forGetter(ModifyBlockStateAction::cycle)
     ).apply(instance, ModifyBlockStateAction::new));
 
     @Override
@@ -60,7 +60,7 @@ public record ModifyBlockStateAction(String property, ResourceOperation operatio
                             level.setBlockAndUpdate(pos, state.setValue((Property<Boolean>) property, this.value().getAsBoolean()));
                     case Integer ignored when this.change().isPresent() -> {
                         ResourceOperation op = this.operation();
-                        int opValue = this.change().getAsInt();
+                        int opValue = this.change().get().resolveInt(BlockAction.executionEntity());
                         int newValue = (int) value;
                         switch (op) {
                             case ADD -> newValue += opValue;

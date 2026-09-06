@@ -53,15 +53,34 @@ public class ActionOnEquipPower extends Power {
         this.action = action;
     }
 
-    public ItemCondition head() { return this.head; }
-    public ItemCondition chest() { return this.chest; }
-    public ItemCondition legs() { return this.legs; }
-    public ItemCondition feet() { return this.feet; }
-    public ItemCondition offhand() { return this.offhand; }
-    public EntityAction action() { return this.action; }
+    public ItemCondition head() {
+        return this.head;
+    }
+
+    public ItemCondition chest() {
+        return this.chest;
+    }
+
+    public ItemCondition legs() {
+        return this.legs;
+    }
+
+    public ItemCondition feet() {
+        return this.feet;
+    }
+
+    public ItemCondition offhand() {
+        return this.offhand;
+    }
+
+    public EntityAction action() {
+        return this.action;
+    }
 
     @Override
-    public @NotNull MapCodec<? extends Power> codec() { return CODEC; }
+    public @NotNull MapCodec<? extends Power> codec() {
+        return CODEC;
+    }
 
     @SubscribeEvent
     public static void onTick(EntityTickEvent.Post event) {

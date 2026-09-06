@@ -2,7 +2,7 @@ package com.iafenvoy.origins.data.action.builtin.entity;
 
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.util.MiscUtil;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -17,13 +17,14 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-public record FireProjectileAction(EntityType<?> entityType, float divergence, float speed, int count,
+public record FireProjectileAction(EntityType<?> entityType, ResourceReference divergence, ResourceReference speed,
+                                   ResourceReference count,
                                    CompoundTag tag, EntityAction projectileAction) implements EntityAction {
     public static final MapCodec<FireProjectileAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BuiltInRegistries.ENTITY_TYPE.byNameCodec().fieldOf("entity_type").forGetter(FireProjectileAction::entityType),
-            Codec.FLOAT.optionalFieldOf("divergence", 1F).forGetter(FireProjectileAction::divergence),
-            Codec.FLOAT.optionalFieldOf("speed", 1F).forGetter(FireProjectileAction::speed),
-            Codec.INT.optionalFieldOf("count", 1).forGetter(FireProjectileAction::count),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("divergence", ResourceReference.number(1)).forGetter(FireProjectileAction::divergence),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("speed", ResourceReference.number(1)).forGetter(FireProjectileAction::speed),
+            ResourceReference.INT_CODEC.optionalFieldOf("count", ResourceReference.number(1)).forGetter(FireProjectileAction::count),
             CompoundTag.CODEC.optionalFieldOf("tag", new CompoundTag()).forGetter(FireProjectileAction::tag),
             EntityAction.optionalCodec("projectile_action").forGetter(FireProjectileAction::projectileAction)
     ).apply(i, FireProjectileAction::new));
@@ -45,7 +46,10 @@ public record FireProjectileAction(EntityType<?> entityType, float divergence, f
         float pitch = source.getXRot();
         float yaw = source.getYRot();
 
-        for (int i = 0; i < this.count; i++) {
+        float divergence = this.divergence.resolveFloat(source);
+        float speed = this.speed.resolveFloat(source);
+        int count = Math.max(0, this.count.resolveInt(source));
+        for (int i = 0; i < count; i++) {
             Entity entityToSpawn = MiscUtil
                     .getEntityWithPassengers(serverWorld, this.entityType, this.tag, verticalOffset, yaw, pitch)
                     .orElse(null);
@@ -53,9 +57,9 @@ public record FireProjectileAction(EntityType<?> entityType, float divergence, f
 
             if (entityToSpawn instanceof Projectile projectileToSpawn) {
                 if (projectileToSpawn instanceof AbstractHurtingProjectile explosiveProjectileToSpawn)
-                    explosiveProjectileToSpawn.accelerationPower = this.speed;
+                    explosiveProjectileToSpawn.accelerationPower = speed;
                 projectileToSpawn.setOwner(source);
-                projectileToSpawn.shootFromRotation(source, pitch, yaw, 0F, this.speed, this.divergence);
+                projectileToSpawn.shootFromRotation(source, pitch, yaw, 0F, speed, divergence);
             } else {
                 float j = 0.017453292F;
                 double k = 0.0075;
@@ -66,8 +70,8 @@ public record FireProjectileAction(EntityType<?> entityType, float divergence, f
 
                 Vec3 velocityToApply = new Vec3(l, m, n)
                         .normalize()
-                        .add(random.nextGaussian() * k * this.divergence, random.nextGaussian() * k * this.divergence, random.nextGaussian() * k * this.divergence)
-                        .scale(this.speed);
+                        .add(random.nextGaussian() * k * divergence, random.nextGaussian() * k * divergence, random.nextGaussian() * k * divergence)
+                        .scale(speed);
                 entityToSpawn.setDeltaMovement(velocityToApply);
                 entityToSpawn.push(velocity.x, source.onGround() ? 0.0D : velocity.y, velocity.z);
             }

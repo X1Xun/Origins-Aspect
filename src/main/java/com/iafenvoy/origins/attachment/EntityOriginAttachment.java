@@ -21,6 +21,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -74,7 +75,7 @@ public final class EntityOriginAttachment {
         Registry<Power> powerRegistry = access.registryOrThrow(PowerRegistries.POWER_KEY);
         boolean resolved = false;
 
-        for (var iterator = this.unresolvedOrigins.entrySet().iterator(); iterator.hasNext(); ) {
+        for (Iterator<Map.Entry<ResourceLocation, ResourceLocation>> iterator = this.unresolvedOrigins.entrySet().iterator(); iterator.hasNext(); ) {
             Map.Entry<ResourceLocation, ResourceLocation> entry = iterator.next();
             Optional<Holder.Reference<Layer>> layer = getHolder(layerRegistry, LayerRegistries.LAYER_KEY, entry.getKey());
             Optional<Holder.Reference<Origin>> origin = getHolder(originRegistry, OriginRegistries.ORIGIN_KEY, entry.getValue());
@@ -85,7 +86,7 @@ public final class EntityOriginAttachment {
             }
         }
 
-        for (var iterator = this.unresolvedPowers.entries().iterator(); iterator.hasNext(); ) {
+        for (Iterator<Map.Entry<ResourceLocation, ResourceLocation>> iterator = this.unresolvedPowers.entries().iterator(); iterator.hasNext(); ) {
             Map.Entry<ResourceLocation, ResourceLocation> entry = iterator.next();
             Optional<Holder.Reference<Power>> power = getHolder(powerRegistry, PowerRegistries.POWER_KEY, entry.getValue());
             if (power.isPresent()) {

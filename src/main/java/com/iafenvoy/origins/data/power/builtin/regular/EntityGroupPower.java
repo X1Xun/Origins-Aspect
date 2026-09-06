@@ -4,7 +4,9 @@ import com.iafenvoy.origins.data.power.Power;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import java.util.Locale;
+
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -41,7 +43,7 @@ public final class EntityGroupPower extends Power {
         DEFAULT;
 
         public static final Codec<Group> CODEC = Codec.STRING.xmap(
-                value -> Group.valueOf(value.toUpperCase(Locale.ROOT)),
+                value -> valueOf(value.toUpperCase(Locale.ROOT)),
                 value -> value.name().toLowerCase(Locale.ROOT)
         );
     }

@@ -11,7 +11,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public record CopyOriginAction(Holder<Layer> layer, boolean modifyActor, boolean modifyTarget) implements BiEntityAction {
+public record CopyOriginAction(Holder<Layer> layer, boolean modifyActor,
+                               boolean modifyTarget) implements BiEntityAction {
     public static final MapCodec<CopyOriginAction> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Layer.CODEC.fieldOf("layer").forGetter(CopyOriginAction::layer),
             Codec.BOOL.optionalFieldOf("modify_actor", false).forGetter(CopyOriginAction::modifyActor),

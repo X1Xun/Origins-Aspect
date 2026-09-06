@@ -28,6 +28,7 @@
     "TargetGoalMixin",
     "accessor.LivingEntityAccessor",
     "accessor.LivingEntityAttackStrengthAccessor",
+    "accessor.BiomeAccessor",
     "accessor.MobAccessor",
     "accessor.MobEffectInstanceAccessor",
     "codec.RegistryDataLoaderMixin",

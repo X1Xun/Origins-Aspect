@@ -58,7 +58,7 @@ public class PreventDeathPower extends Power {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void preventLivingDeath(LivingDeathEvent event) {
         //TODO::damage
-        if (PreventDeathPower.tryPreventDeath(event.getEntity(), event.getSource(), 1)) {
+        if (tryPreventDeath(event.getEntity(), event.getSource(), 1)) {
             event.getEntity().setHealth(1.0F);
             event.setCanceled(true);
         }

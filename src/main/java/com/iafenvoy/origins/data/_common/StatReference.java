@@ -43,7 +43,7 @@ public record StatReference(Either<ResourceLocation, TypedStat> stat) {
      * and a registry value identifier.
      *
      * @param statType e.g. {@code minecraft:mined}
-     * @param id    e.g. {@code minecraft:diamond_ore}
+     * @param id       e.g. {@code minecraft:diamond_ore}
      */
     public record TypedStat(ResourceLocation statType, ResourceLocation id) {
         public static final Codec<TypedStat> CODEC = RecordCodecBuilder.create(i -> i.group(

@@ -4,16 +4,17 @@ import com.iafenvoy.origins.data.action.BiEntityAction;
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.data.condition.BiEntityCondition;
 import com.iafenvoy.origins.util.math.Shape;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-public record RegionApplyAction(double radius, Shape shape, BiEntityAction biEntityAction,
+public record RegionApplyAction(ResourceReference radius, Shape shape, BiEntityAction biEntityAction,
                                 BiEntityCondition biEntityCondition, boolean includeActor) implements EntityAction {
     public static final MapCodec<RegionApplyAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.DOUBLE.optionalFieldOf("radius", 16.0).forGetter(RegionApplyAction::radius),
+            ResourceReference.CODEC.optionalFieldOf("radius", ResourceReference.number(16)).forGetter(RegionApplyAction::radius),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(RegionApplyAction::shape),
             BiEntityAction.CODEC.fieldOf("bientity_action").forGetter(RegionApplyAction::biEntityAction),
             BiEntityCondition.optionalCodec("bientity_condition").forGetter(RegionApplyAction::biEntityCondition),
@@ -27,7 +28,7 @@ public record RegionApplyAction(double radius, Shape shape, BiEntityAction biEnt
 
     @Override
     public void execute(@NotNull Entity source) {
-        for (Entity target : this.shape.getEntities(source.level(), source.position(), this.radius)) {
+        for (Entity target : this.shape.getEntities(source.level(), source.position(), this.radius.resolve(source))) {
             if (target == source && !this.includeActor) continue;
             if (!this.biEntityCondition.test(source, target)) continue;
             this.biEntityAction.execute(source, target);

@@ -84,6 +84,7 @@
   "config.origins.general.compactUsabilityHints": "Compact Usability Hints",
   "config.origins.general.hudOffsetX": "HUD Offset X",
   "config.origins.general.hudOffsetY": "HUD Offset Y",
+  "config.origins.general.maxActionIterations": "Maximum Action Iterations",
   "config.origins.general.permissionLevel": "Command Execute Permission Level",
   "config.origins.modifyPlayerSpawnPower.horizontalBlockCheckInterval": "Horizontal Block Check Interval",
   "config.origins.modifyPlayerSpawnPower.radius": "Radius",

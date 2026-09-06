@@ -104,7 +104,7 @@ public class ModifyCraftingPower extends Power {
     }
 
     public void executeActions(Entity entity, Optional<BlockPos> craftingBlockPos) {
-        craftingBlockPos.ifPresent(pos -> this.blockAction.execute(entity.level(), pos, Optional.empty()));
+        craftingBlockPos.ifPresent(pos -> BlockAction.executeWithContext(this.blockAction, entity, entity.level(), pos, Optional.empty()));
         this.entityAction.execute(entity);
     }
 

@@ -1,6 +1,7 @@
 {
   "replace": false,
   "values": [
+    "origins:damage_over_time",
     "origins:no_water_for_gills",
     "origins:hurt_by_water"
   ]

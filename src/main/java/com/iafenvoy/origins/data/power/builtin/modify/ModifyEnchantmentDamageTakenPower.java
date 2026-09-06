@@ -1,5 +1,6 @@
 package com.iafenvoy.origins.data.power.builtin.modify;
 
+import com.iafenvoy.origins.attachment.OriginDataHolder;
 import com.iafenvoy.origins.attachment.PowerHelper;
 import com.iafenvoy.origins.data._common.helper.ModifierPowerHelper;
 import com.iafenvoy.origins.data.action.BiEntityAction;
@@ -82,7 +83,7 @@ public class ModifyEnchantmentDamageTakenPower extends Power implements Modifier
         return CODEC;
     }
 
-    private float getAdditionalDamage(com.iafenvoy.origins.attachment.OriginDataHolder holder, int enchantmentLevel) {
+    private float getAdditionalDamage(OriginDataHolder holder, int enchantmentLevel) {
         float value = this.baseValue;
         for (int level = 1; level < enchantmentLevel; level++)
             value = this.modify(holder, value);

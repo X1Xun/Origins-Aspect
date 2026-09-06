@@ -84,6 +84,7 @@
   "config.origins.general.compactUsabilityHints": "紧凑可用性提示",
   "config.origins.general.hudOffsetX": "HUD 偏移 X",
   "config.origins.general.hudOffsetY": "HUD 偏移 Y",
+  "config.origins.general.maxActionIterations": "动作最大执行次数",
   "config.origins.general.permissionLevel": "命令执行权限等级",
   "config.origins.modifyPlayerSpawnPower.horizontalBlockCheckInterval": "水平方块检测间隔",
   "config.origins.modifyPlayerSpawnPower.radius": "半径",

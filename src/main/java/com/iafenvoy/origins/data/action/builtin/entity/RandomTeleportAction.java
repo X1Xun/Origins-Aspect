@@ -3,7 +3,7 @@ package com.iafenvoy.origins.data.action.builtin.entity;
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.data.condition.BlockCondition;
 import com.iafenvoy.origins.data.condition.EntityCondition;
-import com.iafenvoy.origins.util.codec.MiscCodecs;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -21,19 +21,19 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
-import java.util.OptionalInt;
 
 //FIXME::Optimize
-public record RandomTeleportAction(float areaWidth, float areaHeight, Optional<Heightmap.Types> heightmap,
-                                   OptionalInt attempts, Optional<BlockCondition> landingBlockCondition,
+public record RandomTeleportAction(ResourceReference areaWidth, ResourceReference areaHeight,
+                                   Optional<Heightmap.Types> heightmap,
+                                   Optional<ResourceReference> attempts, Optional<BlockCondition> landingBlockCondition,
                                    Optional<EntityCondition> landingCondition, Vec3 landingOffset,
                                    boolean loadedChunksOnly, EntityAction successAction,
                                    EntityAction failAction) implements EntityAction {
     public static final MapCodec<RandomTeleportAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.FLOAT.optionalFieldOf("area_width", 8f).forGetter(RandomTeleportAction::areaWidth),
-            Codec.FLOAT.optionalFieldOf("area_height", 8f).forGetter(RandomTeleportAction::areaHeight),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("area_width", ResourceReference.number(8)).forGetter(RandomTeleportAction::areaWidth),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("area_height", ResourceReference.number(8)).forGetter(RandomTeleportAction::areaHeight),
             Heightmap.Types.CODEC.optionalFieldOf("heightmap").forGetter(RandomTeleportAction::heightmap),
-            MiscCodecs.integer("attempts").forGetter(RandomTeleportAction::attempts),
+            ResourceReference.INT_CODEC.optionalFieldOf("attempts").forGetter(RandomTeleportAction::attempts),
             BlockCondition.CODEC.optionalFieldOf("landing_block_condition").forGetter(RandomTeleportAction::landingBlockCondition),
             EntityCondition.CODEC.optionalFieldOf("landing_condition").forGetter(RandomTeleportAction::landingCondition),
             Vec3.CODEC.optionalFieldOf("landing_offset", Vec3.ZERO).forGetter(RandomTeleportAction::landingOffset),
@@ -54,11 +54,13 @@ public record RandomTeleportAction(float areaWidth, float areaHeight, Optional<H
         RandomSource random = RandomSource.create();
         boolean succeeded = false;
         double x, y, z;
-        int attempts = this.attempts.orElseGet(() -> (int) (this.areaWidth * 2 + this.areaHeight * 2));
+        float areaWidth = this.areaWidth.resolveFloat(source);
+        float areaHeight = this.areaHeight.resolveFloat(source);
+        int attempts = this.attempts.map(value -> value.resolveInt(source)).orElseGet(() -> (int) (areaWidth * 2 + areaHeight * 2));
         for (int i = 0; i < attempts; i++) {
-            x = source.getX() + (random.nextDouble() - 0.5) * this.areaWidth;
-            y = Mth.clamp(source.getY() + (random.nextInt(Math.max((int) this.areaHeight, 1)) - (this.areaHeight / 2)), level.getMinBuildHeight(), level.getMinBuildHeight() + (level.getLogicalHeight() - 1));
-            z = source.getZ() + (random.nextDouble() - 0.5) * this.areaWidth;
+            x = source.getX() + (random.nextDouble() - 0.5) * areaWidth;
+            y = Mth.clamp(source.getY() + (random.nextInt(Math.max((int) areaHeight, 1)) - (areaHeight / 2)), level.getMinBuildHeight(), level.getMinBuildHeight() + (level.getLogicalHeight() - 1));
+            z = source.getZ() + (random.nextDouble() - 0.5) * areaWidth;
 
             if (this.attemptToTeleport(source, level, x, y, z)) {
                 this.successAction.execute(source);
@@ -81,7 +83,8 @@ public record RandomTeleportAction(float areaWidth, float areaHeight, Optional<H
             if (foundSurface) destBlockPos.set(destBlockPos.above());
         }
 
-        for (double decrements = 0; !foundSurface && decrements < this.areaHeight / 2; ++decrements) {
+        double areaHeight = this.areaHeight.resolveFloat(entity);
+        for (double decrements = 0; !foundSurface && decrements < areaHeight / 2; ++decrements) {
             destBlockPos.set(destBlockPos.below());
             foundSurface = this.shouldLandOnBlock(serverWorld, destBlockPos);
             if (foundSurface) destBlockPos.set(destBlockPos.above());

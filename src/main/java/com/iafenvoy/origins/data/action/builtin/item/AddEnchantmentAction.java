@@ -33,10 +33,10 @@ public record AddEnchantmentAction(Object2IntMap<Holder<Enchantment>> enchantmen
         ItemStack stack = access.get();
         ItemEnchantments.Mutable mutable = new ItemEnchantments.Mutable(stack.getTagEnchantments());
         for (Object2IntMap.Entry<Holder<Enchantment>> entry : this.enchantment.object2IntEntrySet()) {
-            Holder<Enchantment> enchantment=entry.getKey();
-            int lvl= entry.getIntValue();
-            if(mutable.getLevel(enchantment)>=lvl&&!this.override) continue;
-            mutable.set(enchantment,lvl);
+            Holder<Enchantment> enchantment = entry.getKey();
+            int lvl = entry.getIntValue();
+            if (mutable.getLevel(enchantment) >= lvl && !this.override) continue;
+            mutable.set(enchantment, lvl);
         }
         stack.set(DataComponents.ENCHANTMENTS, mutable.toImmutable());
     }

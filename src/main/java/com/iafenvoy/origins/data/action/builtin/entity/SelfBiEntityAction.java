@@ -3,6 +3,7 @@ package com.iafenvoy.origins.data.action.builtin.entity;
 import com.iafenvoy.origins.data.action.BiEntityAction;
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 public record SelfBiEntityAction(BiEntityAction action) implements EntityAction {
@@ -15,7 +16,7 @@ public record SelfBiEntityAction(BiEntityAction action) implements EntityAction 
     }
 
     @Override
-    public void execute(net.minecraft.world.entity.@NotNull Entity entity) {
+    public void execute(@NotNull Entity entity) {
         this.action.execute(entity, entity);
     }
 }

@@ -6,7 +6,7 @@ import com.iafenvoy.origins.data.action.ItemAction;
 import com.iafenvoy.origins.data.condition.ItemCondition;
 import com.iafenvoy.origins.data.power.reference.PowerReference;
 import com.iafenvoy.origins.util.codec.CombinedCodecs;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import it.unimi.dsi.fastutil.ints.IntList;
@@ -17,7 +17,7 @@ import java.util.Optional;
 
 public record ModifyInventoryAction(EntityAction entityAction, ItemAction itemAction, ItemCondition itemCondition,
                                     IntList slot, Optional<PowerReference> power, ProcessMode processMode,
-                                    int limit) implements EntityAction, InventoryActionHelper {
+                                    ResourceReference limit) implements EntityAction, InventoryActionHelper {
     public static final MapCodec<ModifyInventoryAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             EntityAction.optionalCodec("entity_action").forGetter(ModifyInventoryAction::entityAction),
             ItemAction.CODEC.fieldOf("item_action").forGetter(ModifyInventoryAction::itemAction),
@@ -25,7 +25,7 @@ public record ModifyInventoryAction(EntityAction entityAction, ItemAction itemAc
             CombinedCodecs.INT.optionalFieldOf("slot", IntList.of()).forGetter(ModifyInventoryAction::slot),
             PowerReference.CODEC.optionalFieldOf("power").forGetter(ModifyInventoryAction::power),
             ProcessMode.CODEC.optionalFieldOf("process_mode", ProcessMode.STACKS).forGetter(ModifyInventoryAction::processMode),
-            Codec.INT.optionalFieldOf("limit", 0).forGetter(ModifyInventoryAction::limit)
+            ResourceReference.INT_CODEC.optionalFieldOf("limit", ResourceReference.number(0)).forGetter(ModifyInventoryAction::limit)
     ).apply(i, ModifyInventoryAction::new));
 
     @Override
@@ -35,6 +35,6 @@ public record ModifyInventoryAction(EntityAction entityAction, ItemAction itemAc
 
     @Override
     public void execute(@NotNull Entity source) {
-        this.modifyInventory(source, this.processMode.getProcessor(), this.limit);
+        this.modifyInventory(source, this.processMode.getProcessor(), this.limit.resolveInt(source));
     }
 }

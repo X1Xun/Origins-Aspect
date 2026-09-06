@@ -17,6 +17,7 @@ public final class CommandManager {
         dispatcher.register(OriginsCommand.registerCommand(context));
         dispatcher.register(OriginCommand.registerCommand(context));
         dispatcher.register(PowerCommand.registerCommand(context));
+        dispatcher.register(ModifierCommand.registerCommand());
         dispatcher.register(ResourceCommand.registerCommand());
     }
 }

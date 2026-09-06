@@ -1,6 +1,7 @@
 package com.iafenvoy.origins.data.action.builtin.item;
 
 import com.iafenvoy.origins.data.action.ItemAction;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -11,9 +12,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
-public record DamageAction(int amount, boolean ignoreUnbreaking) implements ItemAction {
+public record DamageAction(ResourceReference amount, boolean ignoreUnbreaking) implements ItemAction {
     public static final MapCodec<DamageAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.INT.optionalFieldOf("amount", 1).forGetter(DamageAction::amount),
+            ResourceReference.INT_CODEC.optionalFieldOf("amount", ResourceReference.number(1)).forGetter(DamageAction::amount),
             Codec.BOOL.optionalFieldOf("ignore_unbreaking", false).forGetter(DamageAction::ignoreUnbreaking)
     ).apply(i, DamageAction::new));
 
@@ -25,8 +26,9 @@ public record DamageAction(int amount, boolean ignoreUnbreaking) implements Item
     @Override
     public void execute(@NotNull Level level, @NotNull Entity source, @NotNull SlotAccess access) {
         ItemStack stack = access.get();
-        if (this.ignoreUnbreaking) stack.setDamageValue(stack.getDamageValue() - this.amount);
-        else if (level instanceof ServerLevel serverLevel) stack.hurtAndBreak(this.amount, serverLevel, null, item -> {
+        int amount = this.amount.resolveInt(source);
+        if (this.ignoreUnbreaking) stack.setDamageValue(stack.getDamageValue() - amount);
+        else if (level instanceof ServerLevel serverLevel) stack.hurtAndBreak(amount, serverLevel, null, item -> {
         });
     }
 }

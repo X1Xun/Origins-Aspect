@@ -18,16 +18,16 @@ import java.util.*;
 
 public class EntitySetComponent extends PowerComponent implements ComponentHolderProvider<EntitySetComponent.SetHolder> {
     public static final MapCodec<EntitySetComponent> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.unboundedMap(UUIDUtil.CODEC, Codec.INT).fieldOf("set").forGetter(EntitySetComponent::getSet)
+            Entry.CODEC.listOf().fieldOf("set").forGetter(EntitySetComponent::getSet)
     ).apply(i, EntitySetComponent::new));
-    private final Map<UUID, Integer> set;
+    private final List<Entry> set;
 
     public EntitySetComponent() {
-        this(Map.of());
+        this(List.of());
     }
 
-    public EntitySetComponent(Map<UUID, Integer> set) {
-        this.set = new LinkedHashMap<>(set);
+    public EntitySetComponent(List<Entry> set) {
+        this.set = new ArrayList<>(set);
     }
 
     @Override
@@ -44,23 +44,31 @@ public class EntitySetComponent extends PowerComponent implements ComponentHolde
     public void tick(OriginDataHolder holder, PowerHolder parent) {
         if (!(parent.power() instanceof EntitySetPower power)) return;
         Entity entity = holder.getEntity();
-        List<UUID> removal = new LinkedList<>();
-        for (Map.Entry<UUID, Integer> e : this.set.entrySet()) {
-            int value = e.getValue();
+        List<UUID> removal = new ArrayList<>();
+        for (ListIterator<Entry> iterator = this.set.listIterator(); iterator.hasNext(); ) {
+            Entry entry = iterator.next();
+            int value = entry.timeLimit();
             if (value == 0) {
-                removal.add(e.getKey());
+                iterator.remove();
+                removal.add(entry.uuid());
                 if (entity.level() instanceof ServerLevel serverLevel) {
-                    Entity l = serverLevel.getEntity(e.getKey());
+                    Entity l = serverLevel.getEntity(entry.uuid());
                     if (l != null) power.getActionOnRemove().execute(entity, l);
                 }
-            } else if (value > 0) this.set.computeIfPresent(e.getKey(), (u, i) -> i - 1);
+            } else if (value > 0) iterator.set(new Entry(entry.uuid(), value - 1));
         }
-        removal.forEach(this.set::remove);
         if (!removal.isEmpty()) this.markDirty();
     }
 
-    public Map<UUID, Integer> getSet() {
+    public List<Entry> getSet() {
         return this.set;
+    }
+
+    public record Entry(UUID uuid, int timeLimit) {
+        public static final Codec<Entry> CODEC = RecordCodecBuilder.create(i -> i.group(
+                UUIDUtil.CODEC.fieldOf("uuid").forGetter(Entry::uuid),
+                Codec.INT.fieldOf("time_limit").forGetter(Entry::timeLimit)
+        ).apply(i, Entry::new));
     }
 
     public record SetHolder(OriginDataHolder holder, EntitySetComponent component, ResourceLocation id) {
@@ -70,21 +78,20 @@ public class EntitySetComponent extends PowerComponent implements ComponentHolde
 
         //-1 for unlimited
         public void addEntity(Entity target, int timeLimit) {
-            if (!this.component.set.containsKey(target.getUUID())) {
-                this.component.set.put(target.getUUID(), timeLimit);
+            if (this.component.set.stream().noneMatch(entry -> entry.uuid().equals(target.getUUID()))) {
+                this.component.set.add(new Entry(target.getUUID(), timeLimit));
                 this.postAdd(target);
             }
         }
 
         public void removeEntity(Entity target) {
-            if (this.component.set.containsKey(target.getUUID())) {
-                this.component.set.remove(target.getUUID());
+            if (this.component.set.removeIf(entry -> entry.uuid().equals(target.getUUID()))) {
                 this.postRemove(target);
             }
         }
 
         public void removeAllEntities(ServerLevel level) {
-            this.component.set.keySet().stream().map(level::getEntity).filter(Objects::nonNull).forEach(this::removeEntity);
+            this.component.set.stream().map(Entry::uuid).map(level::getEntity).filter(Objects::nonNull).toList().forEach(this::removeEntity);
         }
 
         public void postAdd(Entity target) {
@@ -99,11 +106,11 @@ public class EntitySetComponent extends PowerComponent implements ComponentHolde
         }
 
         public List<UUID> getEntityUuids() {
-            return new LinkedList<>(this.component.set.keySet());
+            return this.component.set.stream().map(Entry::uuid).toList();
         }
 
         public boolean containEntity(Entity target) {
-            return this.component.set.containsKey(target.getUUID());
+            return this.component.set.stream().anyMatch(entry -> entry.uuid().equals(target.getUUID()));
         }
 
         public int getSize() {

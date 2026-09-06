@@ -65,7 +65,7 @@ public class ActionOnBlockBreakPower extends Power {
             if (p.onlyWheSuccess && event.isCanceled()) return;
             if (!p.blockCondition.test(event.getPlayer().level(), event.getPos())) return;
             p.entityAction.execute(event.getPlayer());
-            p.blockAction.execute(event.getPlayer().level(), event.getPos(), Optional.of(event.getPlayer().getDirection()));
+            BlockAction.executeWithContext(p.blockAction, event.getPlayer(), event.getPlayer().level(), event.getPos(), Optional.of(event.getPlayer().getDirection()));
         });
     }
 }

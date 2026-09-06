@@ -3,7 +3,7 @@ package com.iafenvoy.origins.data.action.builtin.block.meta;
 import com.iafenvoy.origins.data.action.BlockAction;
 import com.iafenvoy.origins.data.condition.BlockCondition;
 import com.iafenvoy.origins.util.math.Shape;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
@@ -14,10 +14,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 import java.util.Optional;
 
-public record RegionApplyAction(int radius, Shape shape, BlockAction blockAction,
+public record RegionApplyAction(ResourceReference radius, Shape shape, BlockAction blockAction,
                                 BlockCondition blockCondition) implements BlockAction {
     public static final MapCodec<RegionApplyAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.INT.optionalFieldOf("radius", 16).forGetter(RegionApplyAction::radius),
+            ResourceReference.INT_CODEC.optionalFieldOf("radius", ResourceReference.number(16)).forGetter(RegionApplyAction::radius),
             Shape.CODEC.optionalFieldOf("shape", Shape.CUBE).forGetter(RegionApplyAction::shape),
             BlockAction.CODEC.fieldOf("block_action").forGetter(RegionApplyAction::blockAction),
             BlockCondition.optionalCodec("block_condition").forGetter(RegionApplyAction::blockCondition)
@@ -30,7 +30,9 @@ public record RegionApplyAction(int radius, Shape shape, BlockAction blockAction
 
     @Override
     public void execute(@NotNull Level level, @NotNull BlockPos pos, @NotNull Optional<Direction> direction) {
-        List<BlockPos> positions = this.shape.getBlocks(pos, this.radius);
+        double resolved = this.radius.resolve(BlockAction.executionEntity());
+        int radius = resolved <= 0 ? 0 : resolved >= Integer.MAX_VALUE ? Integer.MAX_VALUE : (int) resolved;
+        List<BlockPos> positions = this.shape.getBlocks(pos, radius);
         positions.removeIf(p -> !this.blockCondition.test(level, p));
         positions.forEach(x -> this.blockAction.execute(level, x, direction));
     }

@@ -2,7 +2,7 @@ package com.iafenvoy.origins.data.action.builtin.entity;
 
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.util.codec.CombinedCodecs;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerLevel;
@@ -14,12 +14,13 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record SpawnEffectCloudAction(float radius, float radiusOnUse, int waitTime,
+public record SpawnEffectCloudAction(ResourceReference radius, ResourceReference radiusOnUse,
+                                     ResourceReference waitTime,
                                      List<MobEffectInstance> effect) implements EntityAction {
     public static final MapCodec<SpawnEffectCloudAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.FLOAT.optionalFieldOf("radius", 3F).forGetter(SpawnEffectCloudAction::radius),
-            Codec.FLOAT.optionalFieldOf("radius_on_use", -0.5F).forGetter(SpawnEffectCloudAction::radiusOnUse),
-            Codec.INT.optionalFieldOf("wait_time", 10).forGetter(SpawnEffectCloudAction::waitTime),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("radius", ResourceReference.number(3)).forGetter(SpawnEffectCloudAction::radius),
+            ResourceReference.FLOAT_CODEC.optionalFieldOf("radius_on_use", ResourceReference.number(-0.5)).forGetter(SpawnEffectCloudAction::radiusOnUse),
+            ResourceReference.INT_CODEC.optionalFieldOf("wait_time", ResourceReference.number(10)).forGetter(SpawnEffectCloudAction::waitTime),
             CombinedCodecs.MOB_EFFECT_INSTANCE.optionalFieldOf("effect", List.of()).forGetter(SpawnEffectCloudAction::effect)
     ).apply(i, SpawnEffectCloudAction::new));
 
@@ -32,9 +33,9 @@ public record SpawnEffectCloudAction(float radius, float radiusOnUse, int waitTi
     public void execute(@NotNull Entity source) {
         if (source.level() instanceof ServerLevel serverLevel)
             EntityType.AREA_EFFECT_CLOUD.spawn(serverLevel, c -> {
-                c.setRadius(this.radius);
-                c.setRadiusOnUse(this.radiusOnUse);
-                c.setWaitTime(this.waitTime);
+                c.setRadius(this.radius.resolveFloat(source));
+                c.setRadiusOnUse(this.radiusOnUse.resolveFloat(source));
+                c.setWaitTime(this.waitTime.resolveInt(source));
                 this.effect.stream().map(MobEffectInstance::new).forEach(c::addEffect);
             }, source.blockPosition(), MobSpawnType.MOB_SUMMONED, false, false);
     }

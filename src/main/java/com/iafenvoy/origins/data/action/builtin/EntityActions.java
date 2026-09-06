@@ -27,6 +27,8 @@ public final class EntityActions {
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<BlockActionAction>> BLOCK_ACTION = REGISTRY.register("block_action", () -> BlockActionAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<BlockActionAtAction>> BLOCK_ACTION_AT = REGISTRY.register("block_action_at", () -> BlockActionAtAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<ChangeResourceAction>> CHANGE_RESOURCE = REGISTRY.register("change_resource", () -> ChangeResourceAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<VariableChangeResourceAction>> VARIABLE_CHANGE_RESOURCE = REGISTRY.register("variable_change_resource", () -> VariableChangeResourceAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<VariableExecuteCommandAction>> VARIABLE_EXECUTE_COMMAND = REGISTRY.register("variable_execute_command", () -> VariableExecuteCommandAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<ClearSetAction>> CLEAR_SET = REGISTRY.register("clear_set", () -> ClearSetAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<CraftingTableAction>> CRAFTING_TABLE = REGISTRY.register("crafting_table", () -> CraftingTableAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<DamageAction>> DAMAGE = REGISTRY.register("damage", () -> DamageAction.CODEC);
@@ -80,6 +82,8 @@ public final class EntityActions {
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<DelayAction>> DELAY = REGISTRY.register("delay", () -> DelayAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<IfElseAction>> IF_ELSE = REGISTRY.register("if_else", () -> IfElseAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<IfElseListAction>> IF_ELSE_LIST = REGISTRY.register("if_else_list", () -> IfElseListAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<ForRangeAction>> FOR_RANGE = REGISTRY.register("for_range", () -> ForRangeAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<RegionApplyAction>> REGION_APPLY = REGISTRY.register("region_apply", () -> RegionApplyAction.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<SideAction>> SIDE = REGISTRY.register("side", () -> SideAction.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityAction>, MapCodec<WhileAction>> WHILE = REGISTRY.register("while", () -> WhileAction.CODEC);
 }

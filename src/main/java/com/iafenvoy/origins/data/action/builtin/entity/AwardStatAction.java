@@ -3,7 +3,7 @@ package com.iafenvoy.origins.data.action.builtin.entity;
 import com.iafenvoy.origins.data._common.StatReference;
 import com.iafenvoy.origins.data.action.EntityAction;
 import com.iafenvoy.origins.util.codec.CombinedCodecs;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,10 +13,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record AwardStatAction(List<StatReference> stats, int amount) implements EntityAction {
+public record AwardStatAction(List<StatReference> stats, ResourceReference amount) implements EntityAction {
     public static final MapCodec<AwardStatAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             CombinedCodecs.STAT_REFERENCE.fieldOf("stat").forGetter(AwardStatAction::stats),
-            Codec.INT.optionalFieldOf("amount", 1).forGetter(AwardStatAction::amount)
+            ResourceReference.INT_CODEC.optionalFieldOf("amount", ResourceReference.number(1)).forGetter(AwardStatAction::amount)
     ).apply(i, AwardStatAction::new));
 
     @Override
@@ -29,7 +29,7 @@ public record AwardStatAction(List<StatReference> stats, int amount) implements 
         if (!(source instanceof ServerPlayer player)) return;
         for (StatReference ref : this.stats) {
             Stat<?> resolved = ref.resolve();
-            if (resolved != null) player.awardStat(resolved, this.amount);
+            if (resolved != null) player.awardStat(resolved, this.amount.resolveInt(source));
         }
     }
 }

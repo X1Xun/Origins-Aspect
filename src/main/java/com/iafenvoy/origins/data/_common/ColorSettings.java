@@ -58,7 +58,7 @@ public record ColorSettings(Optional<Float> r, Optional<Float> g, Optional<Float
     }
 
     public ColorSettings merge(int color) {
-        return this.merge(ColorSettings.of(color));
+        return this.merge(of(color));
     }
 
     public ColorSettings merge(ColorSettings another) {

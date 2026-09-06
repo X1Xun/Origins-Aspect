@@ -8,7 +8,9 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-/** Prevents matching mobs from selecting the holder as their attack target. */
+/**
+ * Prevents matching mobs from selecting the holder as their attack target.
+ */
 public final class PreventTargetingPower extends Power {
     public static final MapCodec<PreventTargetingPower> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BaseSettings.CODEC.forGetter(Power::getSettings),

@@ -1,16 +1,16 @@
 package com.iafenvoy.origins.data.action.builtin.entity;
 
 import com.iafenvoy.origins.data.action.EntityAction;
-import com.mojang.serialization.Codec;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public record GainAirAction(int amount) implements EntityAction {
+public record GainAirAction(ResourceReference amount) implements EntityAction {
     public static final MapCodec<GainAirAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.INT.fieldOf("value").forGetter(GainAirAction::amount)
+            ResourceReference.INT_CODEC.fieldOf("value").forGetter(GainAirAction::amount)
     ).apply(i, GainAirAction::new));
 
     @Override
@@ -20,6 +20,7 @@ public record GainAirAction(int amount) implements EntityAction {
 
     @Override
     public void execute(@NotNull Entity source) {
-        if (source instanceof Player player) player.setAirSupply(player.getAirSupply() + this.amount);
+        if (source instanceof Player player)
+            player.setAirSupply(player.getAirSupply() + this.amount.resolveInt(source));
     }
 }

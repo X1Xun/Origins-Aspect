@@ -18,6 +18,7 @@ public class OriginsConfig extends AutoInitConfigContainer {
 
     public static class General extends AutoInitConfigCategoryBase {
         public final IntegerEntry permissionLevel = IntegerEntry.builder("config.origins.general.permissionLevel", 2).key("permissionLevel").range(0, 4).build();
+        public final IntegerEntry maxActionIterations = IntegerEntry.builder("config.origins.general.maxActionIterations", 10_000).key("maxActionIterations").range(1, 1_000_000).build();
         public final BooleanEntry compactUsabilityHints = BooleanEntry.builder("config.origins.general.compactUsabilityHints", false).key("compactUsabilityHints").build();
         public final IntegerEntry hudOffsetX = IntegerEntry.builder("config.origins.general.hudOffsetX", 0).key("hudOffsetX").build();
         public final IntegerEntry hudOffsetY = IntegerEntry.builder("config.origins.general.hudOffsetY", 0).key("hudOffsetY").build();

@@ -5,7 +5,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import org.jetbrains.annotations.NotNull;
 
-/** Lets an active entity use Riptide even when Minecraft's usual water or rain check fails. */
+/**
+ * Lets an active entity use Riptide even when Minecraft's usual water or rain check fails.
+ */
 public final class RiptidePower extends Power {
     public static final MapCodec<RiptidePower> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             BaseSettings.CODEC.forGetter(Power::getSettings)

@@ -21,6 +21,7 @@ public interface HudRenderable extends ResourceHelper {
     }
 
     static float clampProgress(float value, float min, float max) {
+        if (max <= min) return value >= max ? 1F : 0F;
         return Mth.clamp((value - min) / (max - min), 0, 1);
     }
 }

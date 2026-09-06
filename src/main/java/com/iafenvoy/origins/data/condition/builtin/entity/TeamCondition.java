@@ -4,12 +4,16 @@ import com.iafenvoy.origins.data.condition.EntityCondition;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+
 import java.util.Optional;
+
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.NotNull;
 
-/** Checks whether an entity belongs to any team or to a named team. */
+/**
+ * Checks whether an entity belongs to any team or to a named team.
+ */
 public record TeamCondition(Optional<String> team) implements EntityCondition {
     public static final MapCodec<TeamCondition> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Codec.STRING.optionalFieldOf("team").forGetter(TeamCondition::team)

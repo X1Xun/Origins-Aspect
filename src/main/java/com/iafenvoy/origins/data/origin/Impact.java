@@ -47,6 +47,6 @@ public enum Impact {
     }
 
     public static Impact getByValue(int impactValue) {
-        return Impact.values()[impactValue];
+        return values()[impactValue];
     }
 }

@@ -5,7 +5,9 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
-/** Checks that both entities are members of the same non-null scoreboard team. */
+/**
+ * Checks that both entities are members of the same non-null scoreboard team.
+ */
 public enum SameTeamCondition implements BiEntityCondition {
     INSTANCE;
 

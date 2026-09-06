@@ -146,7 +146,8 @@ public class ModifyGrindstonePower extends Power {
 
     public void executeActions(Entity entity, @Nullable BlockPos pos) {
         this.entityAction.execute(entity);
-        if (pos != null) this.blockAction.execute(entity.level(), pos, Optional.empty());
+        if (pos != null)
+            BlockAction.executeWithContext(this.blockAction, entity, entity.level(), pos, Optional.empty());
     }
 
     public void applyAfterGrindingItemAction(Entity entity, SlotAccess outputStackReference) {

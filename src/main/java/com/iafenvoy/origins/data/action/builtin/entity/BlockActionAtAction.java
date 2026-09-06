@@ -23,6 +23,6 @@ public record BlockActionAtAction(BlockAction blockAction) implements EntityActi
     @Override
     public void execute(@NotNull Entity source) {
         BlockPos pos = source.blockPosition();
-        this.blockAction.execute(source.level(), pos, Optional.empty());
+        BlockAction.executeWithContext(this.blockAction, source, source.level(), pos, Optional.empty());
     }
 }

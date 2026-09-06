@@ -16,7 +16,9 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.entity.living.LivingDamageEvent;
 import org.jetbrains.annotations.NotNull;
 
-/** Calls nearby matching mobs to attack an entity that hurt the holder or was hurt by the holder. */
+/**
+ * Calls nearby matching mobs to attack an entity that hurt the holder or was hurt by the holder.
+ */
 @EventBusSubscriber
 public final class ProtectPower extends Power {
     public static final MapCodec<ProtectPower> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
@@ -33,11 +35,18 @@ public final class ProtectPower extends Power {
         this.radius = Math.max(0, radius);
     }
 
-    public EntityCondition protectorCondition() { return this.protectorCondition; }
-    public double radius() { return this.radius; }
+    public EntityCondition protectorCondition() {
+        return this.protectorCondition;
+    }
+
+    public double radius() {
+        return this.radius;
+    }
 
     @Override
-    public @NotNull MapCodec<? extends Power> codec() { return CODEC; }
+    public @NotNull MapCodec<? extends Power> codec() {
+        return CODEC;
+    }
 
     @SubscribeEvent
     public static void onDamage(LivingDamageEvent.Post event) {

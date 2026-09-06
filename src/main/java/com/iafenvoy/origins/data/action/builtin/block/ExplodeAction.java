@@ -3,6 +3,7 @@ package com.iafenvoy.origins.data.action.builtin.block;
 import com.iafenvoy.origins.data.action.BlockAction;
 import com.iafenvoy.origins.data.condition.BlockCondition;
 import com.iafenvoy.origins.util.DestructionType;
+import com.iafenvoy.origins.util.math.ResourceReference;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -18,10 +19,10 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 
-public record ExplodeAction(float power, DestructionType destructionType,
+public record ExplodeAction(ResourceReference power, DestructionType destructionType,
                             Optional<BlockCondition> indestructible, boolean createFire) implements BlockAction {
     public static final MapCodec<ExplodeAction> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
-            Codec.FLOAT.fieldOf("power").forGetter(ExplodeAction::power),
+            ResourceReference.FLOAT_CODEC.fieldOf("power").forGetter(ExplodeAction::power),
             DestructionType.CODEC.optionalFieldOf("destruction_type", DestructionType.BREAK).forGetter(ExplodeAction::destructionType),
             BlockCondition.CODEC.optionalFieldOf("indestructible").forGetter(ExplodeAction::indestructible),
             Codec.BOOL.optionalFieldOf("create_fire", false).forGetter(ExplodeAction::createFire)
@@ -48,6 +49,7 @@ public record ExplodeAction(float power, DestructionType destructionType,
             }
         };
         level.explode(null, level.damageSources().explosion(null, null), calculator,
-                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5, this.power, this.createFire, Level.ExplosionInteraction.MOB);
+                pos.getX() + 0.5, pos.getY() + 0.5, pos.getZ() + 0.5,
+                this.power.resolveFloat(BlockAction.executionEntity()), this.createFire, Level.ExplosionInteraction.MOB);
     }
 }

@@ -11,7 +11,6 @@ import com.iafenvoy.origins.screen.ChooseOriginScreen;
 import com.iafenvoy.origins.screen.WaitForNextLayerScreen;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;

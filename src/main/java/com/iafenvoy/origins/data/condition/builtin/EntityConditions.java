@@ -88,6 +88,10 @@ public final class EntityConditions {
     public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<RelativeHealthCondition>> RELATIVE_HEALTH = REGISTRY.register("relative_health", () -> RelativeHealthCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<? extends EntityCondition>> RAINING = REGISTRY.register("raining", () -> createEntity(entity -> entity.level().isRaining()));
     public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<ResourceCondition>> RESOURCE = REGISTRY.register("resource", () -> ResourceCondition.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<EmptyResourceCondition>> EMPTY_RESOURCE = REGISTRY.register("empty_resource", () -> EmptyResourceCondition.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<FullResourceCondition>> FULL_RESOURCE = REGISTRY.register("full_resource", () -> FullResourceCondition.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<RelativeResourceCondition>> RELATIVE_RESOURCE = REGISTRY.register("relative_resource", () -> RelativeResourceCondition.CODEC);
+    public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<CompareResourcesCondition>> COMPARE_RESOURCES = REGISTRY.register("compare_resources", () -> CompareResourcesCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<RidingCondition>> RIDING = REGISTRY.register("riding", () -> RidingCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<RidingRecursiveCondition>> RIDING_RECURSIVE = REGISTRY.register("riding_recursive", () -> RidingRecursiveCondition.CODEC);
     public static final DeferredHolder<MapCodec<? extends EntityCondition>, MapCodec<RidingRootCondition>> RIDING_ROOT = REGISTRY.register("riding_root", () -> RidingRootCondition.CODEC);

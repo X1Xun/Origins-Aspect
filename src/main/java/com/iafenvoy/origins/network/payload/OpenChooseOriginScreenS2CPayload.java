@@ -12,7 +12,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public record OpenChooseOriginScreenS2CPayload(boolean showBackground, List<Holder<Layer>> layers) implements CustomPacketPayload {
+public record OpenChooseOriginScreenS2CPayload(boolean showBackground,
+                                               List<Holder<Layer>> layers) implements CustomPacketPayload {
     public static final Type<OpenChooseOriginScreenS2CPayload> TYPE = new Type<>(ResourceLocation.fromNamespaceAndPath(Origins.MOD_ID, "open_choose_origin_screen_s2c"));
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenChooseOriginScreenS2CPayload> STREAM_CODEC = StreamCodec.composite(
             ByteBufCodecs.BOOL, OpenChooseOriginScreenS2CPayload::showBackground,

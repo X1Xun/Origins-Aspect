@@ -14,8 +14,11 @@ public final class BuiltinComponents {
     //List
     public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<ActiveComponent>> ACTIVE = REGISTRY.register("active", () -> ActiveComponent.CODEC);
     public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<CooldownComponent>> COOLDOWN = REGISTRY.register("cooldown", () -> CooldownComponent.CODEC);
+    public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<DamageOverTimeComponent>> DAMAGE_OVER_TIME = REGISTRY.register("damage_over_time", () -> DamageOverTimeComponent.CODEC);
     public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<EntitySetComponent>> ENTITY_SET = REGISTRY.register("entity_set", () -> EntitySetComponent.CODEC);
     public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<InventoryComponent>> INVENTORY = REGISTRY.register("inventory", () -> InventoryComponent.CODEC);
     public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<ResourceComponent>> RESOURCE = REGISTRY.register("resource", () -> ResourceComponent.CODEC);
+    public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<TimedResourceComponent>> TIMED_RESOURCE = REGISTRY.register("timed_resource", () -> TimedResourceComponent.CODEC);
+    public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<DoubleResourceComponent>> DOUBLE_RESOURCE = REGISTRY.register("double_resource", () -> DoubleResourceComponent.CODEC);
     public static final DeferredHolder<MapCodec<? extends PowerComponent>, MapCodec<ToggleComponent>> TOGGLE = REGISTRY.register("toggle", () -> ToggleComponent.CODEC);
 }

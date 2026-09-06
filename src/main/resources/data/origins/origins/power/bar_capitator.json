@@ -1,0 +1,19 @@
+{
+  "type": "origins:action_on_block_break",
+  "block_condition": {
+    "type": "origins:in_tag",
+    "tag": "minecraft:logs"
+  },
+  "item_condition": {
+    "type": "origins:ingredient",
+    "ingredient": {
+      "tag": "minecraft:axes"
+    }
+  },
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "fill ~-2 ~1 ~-2 ~2 ~15 ~2 air destroy filtered minecraft:logs"
+  },
+  "name": "Лесоруб",
+  "description": "Когда вы срубаете нижний блок дерева с помощью топора, всё дерево падает целиком."
+}

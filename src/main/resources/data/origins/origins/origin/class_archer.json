@@ -1,0 +1,10 @@
+{
+	"powers": [
+		"origins:anc_arrow_rain"
+	],
+	"icon": {
+		"id": "origins:archer_icon"
+	},
+	"order": 4,
+	"impact": 1
+}

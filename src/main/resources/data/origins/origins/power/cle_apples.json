@@ -1,0 +1,57 @@
+{
+  "type": "origins:action_on_item_use",
+  "item_condition": {
+    "type": "origins:ingredient",
+    "ingredient": [
+      { "item": "minecraft:apple" },
+      { "item": "minecraft:golden_apple" }
+    ]
+  },
+  "entity_action": {
+    "type": "origins:if_else",
+    "condition": {
+      "type": "origins:equipped_item",
+      "slot": "mainhand",
+      "item_condition": {
+        "type": "origins:ingredient",
+        "ingredient": { "item": "minecraft:golden_apple" }
+      }
+    },
+    "if_action": {
+      "type": "origins:and",
+      "actions": [
+        {
+          "type": "origins:apply_effect",
+          "effect": { "effect": "minecraft:regeneration", "duration": 400, "amplifier": 1 }
+        },
+        {
+          "type": "origins:apply_effect",
+          "effect": { "effect": "minecraft:absorption", "duration": 2400, "amplifier": 3 }
+        },
+        {
+          "type": "origins:apply_effect",
+          "effect": { "effect": "minecraft:resistance", "duration": 600, "amplifier": 0 }
+        },
+        {
+          "type": "origins:apply_effect",
+          "effect": { "effect": "minecraft:fire_resistance", "duration": 600, "amplifier": 0 }
+        }
+      ]
+    },
+    "else_action": {
+      "type": "origins:and",
+      "actions": [
+        {
+          "type": "origins:apply_effect",
+          "effect": { "effect": "minecraft:regeneration", "duration": 100, "amplifier": 1 }
+        },
+        {
+          "type": "origins:apply_effect",
+          "effect": { "effect": "minecraft:absorption", "duration": 2400, "amplifier": 0 }
+        }
+      ]
+    }
+  },
+  "name": "Алхимия Плодов",
+  "description": "Ваш организм извлекает максимум пользы: обычные яблоки действуют как золотые, а золотые — как зачарованные."
+}

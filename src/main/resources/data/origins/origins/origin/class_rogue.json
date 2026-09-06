@@ -1,0 +1,11 @@
+{
+	"powers": [
+		"origins:rog_aue",
+		"origins:rog_dodge"
+	],
+	"icon": {
+		"id": "origins:rogue_icon"
+	},
+	"order": 4,
+	"impact": 1
+}

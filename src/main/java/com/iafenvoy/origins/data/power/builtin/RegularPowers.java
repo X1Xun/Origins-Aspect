@@ -7,6 +7,7 @@ import com.iafenvoy.origins.data.power.Power;
 import com.iafenvoy.origins.data.power.PowerRegistries;
 import com.iafenvoy.origins.data.power.builtin.regular.*;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.world.entity.projectile.Arrow;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -75,4 +76,8 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<WalkOnFluidPower>> WALK_ON_FLUID = REGISTRY.register("walk_on_fluid", () -> WalkOnFluidPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<WaterBreathingPower>> WATER_BREATHING = REGISTRY.register("water_breathing", () -> WaterBreathingPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<WaterVisionPower>> WATER_VISION = REGISTRY.register("water_vision", () -> WaterVisionPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<LookVelocityPower>> LOOK_VELOCITY = REGISTRY.register("look_velocity", () -> LookVelocityPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ArrowRainPower>> ARROW_RAIN = REGISTRY.register("arrow_rain", () -> ArrowRainPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<WarlockMainPower>> WARLOCK_MAIN = REGISTRY.register("warlock_main", () -> WarlockMainPower.CODEC);
+
 }

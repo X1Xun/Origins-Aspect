@@ -1,0 +1,17 @@
+{
+  "type": "origins:warlock_main",
+  "cooldown": 1200,
+  "default_power": "ANCIENT",
+  "hud_render": {
+    "should_render_inactive": true,
+    "sprite_location": "origins:textures/gui/warlock_hud.png",
+    "bar_index": 0
+  },
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "display": {
+    "name": "Магия Колдуна",
+    "description": "Активирует заклинание текущей стихии:\n\n§a• Земля§r: Регенерация III на 30 сек.\n§b• Нежить§r: Призыв 4-х зомби-прислужников.\n§3• Древний§r: Сонический бум Вардена сквозь стены.\n§7• Разбойник§r: Вызывает цепь челюстей заклинателя.\n§c• Адская§r: Слот заблокирован.\n§d• Дракон§r: Слот заблокирован."
+  }
+}

@@ -1,0 +1,10 @@
+{
+	"powers": [
+		"origins:webbing"
+	],
+	"icon": {
+		"id": "origins:monk_icon"
+	},
+	"order": 4,
+	"impact": 1
+}

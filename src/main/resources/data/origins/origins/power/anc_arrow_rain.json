@@ -1,0 +1,17 @@
+{
+  "type": "origins:arrow_rain",
+  "cooldown": 200,
+  "hud_render": {
+    "should_render": true,
+    "bar_index": 4
+  },
+  "arrow_count": 50,
+  "damage": 12.0,
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "display": {
+    "name": "Ливень из стрел",
+    "description": "Обрушивает шквал из 15 падающих стрел в точку, на которую вы смотрите. Если вы смотрите в небо, стрелы упадут перед вами."
+  }
+}

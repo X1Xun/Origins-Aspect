@@ -1,0 +1,10 @@
+{
+	"powers": [
+		"origins:webbing"
+	],
+	"icon": {
+		"id": "minecraft:bow"
+	},
+	"order": 4,
+	"impact": 1
+}

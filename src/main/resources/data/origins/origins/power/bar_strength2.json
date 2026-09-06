@@ -1,0 +1,13 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 20,
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "effect give @s minecraft:strength 5 1 true",
+    "permission_level": 4
+  },
+  "display": {
+    "name": "Нечеловеческая сила",
+    "description": "Ваши удары становятся намного мощнее благодаря постоянному эффекту Силы II."
+  }
+}

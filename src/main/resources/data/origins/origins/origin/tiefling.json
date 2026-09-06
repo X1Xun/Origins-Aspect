@@ -1,0 +1,10 @@
+{
+	"powers": [
+		"origins:webbing"
+	],
+	"icon": {
+		"id": "minecraft:blaze_rod"
+	},
+	"order": 4,
+	"impact": 2
+}

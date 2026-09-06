@@ -1,0 +1,13 @@
+{
+  "type": "origins:action_over_time",
+  "interval": 20,
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "effect give @s minecraft:speed 5 1 true",
+    "permission_level": 4
+  },
+  "display": {
+    "name": "Легкость в ногах",
+    "description": "Вы передвигаетесь гораздо быстрее обычных существ благодаря постоянному эффекту Скорости II."
+  }
+}

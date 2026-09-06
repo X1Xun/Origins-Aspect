@@ -1,0 +1,12 @@
+{
+	"powers": [
+		"origins:throw_ender_pearl",
+		"origins:war_neutrality",
+		"origins:war_main"
+	],
+	"icon": {
+		"id": "origins:warlock_icon"
+	},
+	"order": 4,
+	"impact": 1
+}

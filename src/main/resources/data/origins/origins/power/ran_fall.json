@@ -1,0 +1,15 @@
+{
+  "type": "origins:modify_damage_taken",
+  "damage_condition": {
+    "type": "origins:in_tag",
+    "tag": "minecraft:is_fall"
+  },
+  "modifier": {
+    "operation": "add_to_total",
+    "value": 2.0
+  },
+  "display": {
+    "name": "Хрупкие кости",
+    "description": "Ваш скелет менее прочный, из-за чего любой урон от падения дополняется уроном на 1 сердце."
+  }
+}

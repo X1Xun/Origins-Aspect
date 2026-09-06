@@ -1,0 +1,10 @@
+{
+	"powers": [
+		"origins:alc_mixing_potions"
+	],
+	"icon": {
+		"id": "origins:alchemist_icon"
+	},
+	"order": 4,
+	"impact": 1
+}

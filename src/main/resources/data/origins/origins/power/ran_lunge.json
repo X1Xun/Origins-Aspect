@@ -1,0 +1,16 @@
+{
+  "type": "origins:look_velocity",
+  "strength": 1.8,
+  "cooldown": 60,
+  "hud_render": {
+    "should_render": true,
+    "bar_index": 2
+  },
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "display": {
+    "name": "Векторный Натиск",
+    "description": "При активации [G] совершает резкий рывок по направлению взгляда. Перезарядка: 3 секунды."
+  }
+}

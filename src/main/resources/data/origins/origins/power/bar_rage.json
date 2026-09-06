@@ -1,0 +1,48 @@
+{
+  "type": "origins:active_self",
+  "entity_action": {
+    "type": "origins:and",
+    "actions": [
+      {
+        "type": "origins:execute_command",
+        "command": "effect give @s minecraft:speed 40 2 true",
+        "permission_level": 4
+      },
+      {
+        "type": "origins:execute_command",
+        "command": "effect give @s minecraft:strength 40 2 true",
+        "permission_level": 4
+      },
+      {
+        "type": "origins:delay",
+        "ticks": 800,
+        "action": {
+          "type": "origins:execute_command",
+          "command": "effect give @s minecraft:slowness 5 1 true",
+          "permission_level": 4
+        }
+      },
+      {
+        "type": "origins:delay",
+        "ticks": 800,
+        "action": {
+          "type": "origins:execute_command",
+          "command": "effect give @s minecraft:weakness 60 2 true",
+          "permission_level": 4
+        }
+      }
+    ]
+  },
+  "cooldown": 2400,
+  "hud_render": {
+    "should_render": true,
+    "bar_index": 9
+  },
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "display": {
+    "name": "Режим Ярости",
+    "description": "При активации дает Скорость III и Силу III на 40 секунд. После завершения накладывает Замедление II и Утомление I на 10 секунд."
+  }
+}

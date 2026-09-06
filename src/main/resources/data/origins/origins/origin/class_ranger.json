@@ -1,0 +1,13 @@
+{
+	"powers": [
+		"origins:ran_arrows",
+		"origins:ran_fall",
+		"origins:ran_lunge",
+		"origins:ran_speed"
+	],
+	"icon": {
+		"id": "origins:ranger_icon"
+	},
+	"order": 4,
+	"impact": 1
+}

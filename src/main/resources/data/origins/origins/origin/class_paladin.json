@@ -1,0 +1,10 @@
+{
+	"powers": [
+		"origins:webbing"
+	],
+	"icon": {
+		"id": "origins:paladin_icon"
+	},
+	"order": 4,
+	"impact": 1
+}

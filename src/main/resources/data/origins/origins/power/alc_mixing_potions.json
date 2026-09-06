@@ -1,0 +1,21 @@
+{
+  "type": "origins:active_self",
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "potions_mix",
+    "permission_level": 4
+  },
+  "cooldown": 20,
+  "hud_render": {
+    "should_render": true,
+	"bar_index": 1,
+	"hide_when_ready": true
+  },
+  "key": {
+    "key": "key.origins.primary_active"
+  },
+  "display": {
+    "name": "Алхимическое слияние",
+    "description": "Возьмите по одному зелью в каждую руку и нажмите [G], чтобы динамически слить их эффекты в один мощный флакон."
+  }
+}

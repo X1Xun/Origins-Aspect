@@ -1,0 +1,15 @@
+{
+  "order": 1,
+  "enabled": true,
+  "origins": [
+    "origins:class_archer",
+	"origins:class_barbarian",
+	"origins:class_warlock",
+	"origins:class_cleric",
+	"origins:class_alchemist",
+	"origins:class_paladin",
+	"origins:class_monk",
+	"origins:class_ranger",
+	"origins:class_rogue"
+  ]
+}

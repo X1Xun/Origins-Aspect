@@ -10,7 +10,7 @@
   "speed": 1.5,
   "divergence": 1,
   "key": {
-    "key": "key.origins.primary_active",
+    "key": "key.origins.secondary_active",
     "continuous": false
   }
 }

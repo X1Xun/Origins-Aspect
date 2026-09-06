@@ -1,0 +1,11 @@
+{
+  "type": "origins:prevent_item_use",
+  "item_condition": {
+    "type": "origins:ingredient",
+    "ingredient": {
+      "item": "minecraft:trident"
+    }
+  },
+  "name": "Несовместимость с морем",
+  "description": "Ваша природа отвергает силу глубин, лишая вас возможности метать или использовать трезубец."
+}

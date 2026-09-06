@@ -1,0 +1,35 @@
+{
+  "type": "origins:modify_damage_taken",
+  "damage_condition": {
+    "type": "origins:constant_boolean",
+    "value": true
+  },
+  "bientity_action": {
+    "type": "origins:chance",
+    "chance": 0.2,
+    "action": {
+      "type": "origins:target_action",
+      "action": {
+        "type": "origins:and",
+        "actions": [
+          {
+            "type": "origins:execute_command",
+            "command": "playsound minecraft:entity.player.attack.nodamage player @a ~ ~ ~ 1 1.5",
+            "permission_level": 4
+          },
+          {
+            "type": "origins:execute_command",
+            "command": "particle minecraft:sweep_attack ~ ~1 ~ 0.5 0.5 0.5 0 5",
+            "permission_level": 4
+          }
+        ]
+      }
+    }
+  },
+  "modifier": {
+    "operation": "multiply_total",
+    "value": -1.0
+  },
+  "name": "Плутовское уклонение",
+  "description": "При получении урона вы имеете 20% шанс полностью увернуться от атаки."
+}

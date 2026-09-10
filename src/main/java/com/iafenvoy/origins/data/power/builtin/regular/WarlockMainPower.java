@@ -109,8 +109,8 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
             return new com.iafenvoy.origins.data._common.HudRender(
                     baseHud.shouldRenderInActive(),
                     baseHud.spriteLocation(),
-                    targetBarIndex,
-                    baseHud.iconIndex(),
+                    com.iafenvoy.origins.util.math.ResourceReference.number(targetBarIndex),
+                    com.iafenvoy.origins.util.math.ResourceReference.number(targetBarIndex),
                     baseHud.condition(),
                     baseHud.inverted(),
                     baseHud.order()
@@ -317,20 +317,36 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         double startY = entity.getY();
                         double startZ = entity.getZ();
 
+                        // Находим перпендикулярный вектор горизонтального направления (боковое смещение)
+                        // Нормализуем его, чтобы шаг вбок всегда был фиксированной длины (например, 1 блок)
+                        Vec3 sideDir = new Vec3(-look.z, 0, look.x).normalize();
+                        double sideOffset = 1.0D; // Расстояние от центральной дорожки до боковых (в блоках)
+
                         for (int i = 1; i <= 28; i++) {
-                            double spawnX = startX + look.x * (i * 0.75D);
-                            double spawnZ = startZ + look.z * (i * 0.75D);
+                            // Центр текущего шага
+                            double centerX = startX + look.x * (i * 0.75D);
+                            double centerZ = startZ + look.z * (i * 0.75D);
 
-                            net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(spawnX, startY, spawnZ);
-                            while (serverLevel.getBlockState(pos).isAir() && pos.getY() > serverLevel.getMinBuildHeight()) {
-                                pos = pos.below();
+                            // Массив из 3-х смещений: 0 (центр), 1 (вправо), -1 (влево)
+                            double[] offsets = {0.0D, sideOffset, -sideOffset};
+
+                            for (double offset : offsets) {
+                                // Рассчитываем координаты для конкретной линии (левой, центральной или правой)
+                                double spawnX = centerX + sideDir.x * offset;
+                                double spawnZ = centerZ + sideDir.z * offset;
+
+                                net.minecraft.core.BlockPos pos = net.minecraft.core.BlockPos.containing(spawnX, startY, spawnZ);
+                                while (serverLevel.getBlockState(pos).isAir() && pos.getY() > serverLevel.getMinBuildHeight()) {
+                                    pos = pos.below();
+                                }
+                                double spawnY = pos.getY() + 1.0D;
+
+                                net.minecraft.world.entity.projectile.EvokerFangs fangs =
+                                        new net.minecraft.world.entity.projectile.EvokerFangs(serverLevel, spawnX, spawnY, spawnZ,
+                                                entity.getYRot(), i, (net.minecraft.world.entity.LivingEntity) entity);
+
+                                serverLevel.addFreshEntity(fangs);
                             }
-                            double spawnY = pos.getY() + 1.0D;
-                            net.minecraft.world.entity.projectile.EvokerFangs fangs =
-                                    new net.minecraft.world.entity.projectile.EvokerFangs(serverLevel, spawnX, spawnY, spawnZ,
-                                            entity.getYRot(), i, (net.minecraft.world.entity.LivingEntity) entity);
-
-                            serverLevel.addFreshEntity(fangs);
                         }
 
                         serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),

@@ -1,0 +1,10 @@
+{
+  "type": "origins:attribute",
+  "modifier": {
+    "attribute": "minecraft:player.sneaking_speed",
+    "value": 20.0,
+    "operation": "add_value"
+  },
+  "name": "Крепкое здоровье",
+  "description": "Ваш организм гораздо выносливее обычного, что дает вам 6 дополнительных сердец."
+}

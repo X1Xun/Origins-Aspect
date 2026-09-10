@@ -1,7 +1,9 @@
 {
 	"powers": [
 		"origins:rog_aue",
-		"origins:rog_dodge"
+		"origins:rog_dodge",
+		"origins:rog_not_more_hearts",
+		"origins:rog_swift_sneaking"
 	],
 	"icon": {
 		"id": "origins:rogue_icon"

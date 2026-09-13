@@ -17,8 +17,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class LookVelocityPower extends HasCooldownPower implements Toggleable {
-
-    // Идеальный кодек, который парсит базовые настройки, кулдаун, силу рывка и бинд кнопки
     public static final MapCodec<LookVelocityPower> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
             BaseSettings.CODEC.forGetter(Power::getSettings),
             CooldownSettings.CODEC.forGetter(HasCooldownPower::getCooldown),
@@ -62,6 +60,8 @@ public class LookVelocityPower extends HasCooldownPower implements Toggleable {
 
     @Override
     public void toggle(@NotNull OriginDataHolder holder, String key) {
+        if (!this.key.match(key) || !this.isActive(holder)) return;
+
         this.getCooldownComponent(holder).useIfReady(() -> {
             Entity entity = holder.getEntity();
 
@@ -81,4 +81,5 @@ public class LookVelocityPower extends HasCooldownPower implements Toggleable {
             }
         });
     }
+
 }

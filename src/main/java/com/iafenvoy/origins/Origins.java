@@ -4,6 +4,7 @@ import com.iafenvoy.jupiter.ConfigManager;
 import com.iafenvoy.jupiter.ServerConfigManager;
 import com.iafenvoy.origins.config.OriginsConfig;
 import com.iafenvoy.origins.content.IconItems;
+import com.iafenvoy.origins.content.ModEffects;
 import com.iafenvoy.origins.content.ModItems;
 import com.iafenvoy.origins.data.action.builtin.BiEntityActions;
 import com.iafenvoy.origins.data.action.builtin.BlockActions;
@@ -21,8 +22,10 @@ import com.iafenvoy.origins.data.power.component.BuiltinComponents;
 import com.iafenvoy.origins.registry.*;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.entity.living.LivingFallEvent;
 import org.slf4j.Logger;
 
 @Mod(Origins.MOD_ID)
@@ -30,8 +33,16 @@ public final class Origins {
     public static final String MOD_ID = "origins";
     public static final Logger LOGGER = LogUtils.getLogger();
 
+    @SubscribeEvent
+    public static void onLivingFall(LivingFallEvent event) {
+        if (event.getEntity().hasEffect(ModEffects.LOW_GRAVITY)) {
+            event.setDistance(0.0F);
+        }
+    }
+
     public Origins(IEventBus bus) {
         NeoForge.EVENT_BUS.addListener(ModifyPotionDurationPower::onItemUseFinish);
+        ModEffects.register(bus);
         ConfigManager.getInstance().registerServerConfigHandler(OriginsConfig.INSTANCE, ServerConfigManager.PermissionChecker.IS_OPERATOR);
         ModItems.register(bus);
         OriginsAttachments.REGISTRY.register(bus);
@@ -66,5 +77,7 @@ public final class Origins {
         RegularPowers.REGISTRY.register(bus);
         //Power Components
         BuiltinComponents.REGISTRY.register(bus);
+
+
     }
 }

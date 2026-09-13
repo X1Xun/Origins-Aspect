@@ -1,5 +1,5 @@
 {
-  "type": "origins:modify_food",
+  "type": "origins:prevent_item_use",
   "item_condition": {
     "type": "origins:ingredient",
     "ingredient": [
@@ -8,10 +8,6 @@
       { "item": "minecraft:cookie" },
       { "item": "minecraft:pumpkin_pie" }
     ]
-  },
-  "saturation_modifier": {
-    "operation": "multiply_total",
-    "value": -1.0
   },
   "name": "Непереносимость сладкого",
   "description": "Мёд, торт, печенье и тыквенные пироги не дают вам сытости — вы быстро проголодаетесь снова."

@@ -41,6 +41,7 @@ public final class Origins {
     }
 
     public Origins(IEventBus bus) {
+        NeoForge.EVENT_BUS.addListener(Origins::onLivingFall);
         NeoForge.EVENT_BUS.addListener(ModifyPotionDurationPower::onItemUseFinish);
         ModEffects.register(bus);
         ConfigManager.getInstance().registerServerConfigHandler(OriginsConfig.INSTANCE, ServerConfigManager.PermissionChecker.IS_OPERATOR);

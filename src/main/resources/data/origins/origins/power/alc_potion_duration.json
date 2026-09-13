@@ -1,0 +1,9 @@
+{
+  "type": "origins:modify_potion_duration",
+  "modifier": [
+    {
+      "operation": "multiply_base",
+      "value": 2.0
+    }
+  ]
+}

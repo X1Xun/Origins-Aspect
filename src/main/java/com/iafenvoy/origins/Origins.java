@@ -15,11 +15,14 @@ import com.iafenvoy.origins.data.power.builtin.ActionPowers;
 import com.iafenvoy.origins.data.power.builtin.ModifyPowers;
 import com.iafenvoy.origins.data.power.builtin.PreventPowers;
 import com.iafenvoy.origins.data.power.builtin.RegularPowers;
+import com.iafenvoy.origins.data.power.builtin.modify.ModifyPotionDurationPower;
+import com.iafenvoy.origins.data.power.builtin.prevent.PreventBlockTriggerPower;
 import com.iafenvoy.origins.data.power.component.BuiltinComponents;
 import com.iafenvoy.origins.registry.*;
 import com.mojang.logging.LogUtils;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.common.NeoForge;
 import org.slf4j.Logger;
 
 @Mod(Origins.MOD_ID)
@@ -28,6 +31,7 @@ public final class Origins {
     public static final Logger LOGGER = LogUtils.getLogger();
 
     public Origins(IEventBus bus) {
+        NeoForge.EVENT_BUS.addListener(ModifyPotionDurationPower::onItemUseFinish);
         ConfigManager.getInstance().registerServerConfigHandler(OriginsConfig.INSTANCE, ServerConfigManager.PermissionChecker.IS_OPERATOR);
         ModItems.register(bus);
         OriginsAttachments.REGISTRY.register(bus);

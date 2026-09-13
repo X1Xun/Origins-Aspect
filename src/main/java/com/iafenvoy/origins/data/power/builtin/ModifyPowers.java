@@ -47,4 +47,6 @@ public final class ModifyPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifySlipperinessPower>> MODIFY_SLIPPERINESS = REGISTRY.register("modify_slipperiness", () -> ModifySlipperinessPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyVelocityPower>> MODIFY_VELOCITY = REGISTRY.register("modify_velocity", () -> ModifyVelocityPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyXPGainPower>> MODIFY_XP_GAIN = REGISTRY.register("modify_xp_gain", () -> ModifyXPGainPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ModifyPotionDurationPower>> MODIFY_POTION_DURATION = REGISTRY.register("modify_potion_duration", () -> ModifyPotionDurationPower.CODEC);
+
 }

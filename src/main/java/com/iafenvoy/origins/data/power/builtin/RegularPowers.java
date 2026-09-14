@@ -94,5 +94,5 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ArrowRainPower>> ARROW_RAIN = REGISTRY.register("arrow_rain", () -> ArrowRainPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<WarlockMainPower>> WARLOCK_MAIN = REGISTRY.register("warlock_main", () -> WarlockMainPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<GrapplingHookPower>> GRAPPLING_HOOK = REGISTRY.register("grappling_hook", () -> GrapplingHookPower.CODEC);
-
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<HolyBoltPower>> HOLY_BOLT = REGISTRY.register("holy_bolt", () -> HolyBoltPower.CODEC);
 }

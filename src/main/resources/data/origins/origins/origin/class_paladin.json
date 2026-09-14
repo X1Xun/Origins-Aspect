@@ -1,6 +1,6 @@
 {
 	"powers": [
-		"origins:webbing"
+		"origins:pal_holy_bolt"
 	],
 	"icon": {
 		"id": "origins:paladin_icon"

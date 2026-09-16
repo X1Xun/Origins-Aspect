@@ -1,11 +1,10 @@
 {
 	"powers": [
-		"origins:ran_arrows",
 		"origins:ran_fall",
 		"origins:ran_lunge",
 		"origins:ran_speed",
 		"origins:ran_prevent_traps",
-		"origins:ran_grappling_hook"
+		"origins:throw_ender_pearl"
 	],
 	"icon": {
 		"id": "origins:ranger_icon"

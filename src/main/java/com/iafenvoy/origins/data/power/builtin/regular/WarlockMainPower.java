@@ -14,14 +14,13 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class WarlockMainPower extends HasCooldownPower implements Toggleable {
 
     public enum warlock_powers {
-        INFERNAL, EARTH, ANCIENT, UNDEAD, PILLAGER, DRAGON, WIND;
+        INFERNAL, EARTH, ANCIENT, FROST, PILLAGER, DRAGON, WIND;
 
         public static final Codec<warlock_powers> CODEC = Codec.stringResolver(warlock_powers::name, warlock_powers::valueOf);
     }
@@ -30,7 +29,7 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
             BaseSettings.CODEC.forGetter(Power::getSettings),
             CooldownSettings.CODEC.forGetter(HasCooldownPower::getCooldown),
             KeySettings.CODEC.forGetter(WarlockMainPower::getKey),
-            warlock_powers.CODEC.optionalFieldOf("default_power", warlock_powers.UNDEAD).forGetter(WarlockMainPower::getDefaultPower)
+            warlock_powers.CODEC.optionalFieldOf("default_power", warlock_powers.FROST).forGetter(WarlockMainPower::getDefaultPower)
     ).apply(i, WarlockMainPower::new));
 
     private final KeySettings key;
@@ -97,7 +96,7 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
 
             int targetBarIndex = switch (playerPower) {
                 case EARTH -> 4;
-                case UNDEAD -> 3;
+                case FROST -> 3;
                 case INFERNAL -> 2;
                 case DRAGON -> 1;
                 case ANCIENT -> 0;
@@ -197,54 +196,6 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         currentCooldownTicks = 600;
                     }
                     //Свиток мертвеца - призыв 4-х зомби, минута
-                    case UNDEAD -> {
-                        net.minecraft.world.scores.Scoreboard scoreboard = serverLevel.getScoreboard();
-                        String teamName = entity.getName().getString() + "_minions";
-                        net.minecraft.world.scores.PlayerTeam warlockTeam = scoreboard.getPlayerTeam(teamName);
-
-                        if (warlockTeam == null) {
-                            warlockTeam = scoreboard.addPlayerTeam(teamName);
-                            warlockTeam.setSeeFriendlyInvisibles(true);
-                            warlockTeam.setAllowFriendlyFire(false);
-                        }
-
-                        scoreboard.addPlayerToTeam(entity.getScoreboardName(), warlockTeam);
-
-                        for (int i = 0; i < 4; i++) {
-                            net.minecraft.world.entity.monster.Zombie zombie =
-                                    net.minecraft.world.entity.EntityType.ZOMBIE.create(serverLevel);
-
-                            if (zombie != null) {
-                                double angle = i * (Math.PI / 2.0D);
-                                double spawnX = entity.getX() + Math.cos(angle) * 2.0D;
-                                double spawnZ = entity.getZ() + Math.sin(angle) * 2.0D;
-                                double spawnY = entity.getY() + 0.5D;
-
-                                zombie.setPos(spawnX, spawnY, spawnZ);
-
-                                net.minecraft.core.BlockPos zombiePos = zombie.blockPosition();
-                                zombie.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(zombiePos),
-                                        net.minecraft.world.entity.MobSpawnType.MOB_SUMMONED, null);
-
-                                zombie.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                                        net.minecraft.world.effect.MobEffects.FIRE_RESISTANCE, 6000, 0, false, false));
-
-                                zombie.addTag("warlock_minion");
-                                zombie.addTag("owner_" + entity.getUUID().toString());
-
-                                scoreboard.addPlayerToTeam(zombie.getScoreboardName(), warlockTeam);
-                                serverLevel.addFreshEntity(zombie);
-
-                                serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.SOUL,
-                                        zombie.getX(), zombie.getY() + 1.0D, zombie.getZ(), 10, 0.3D, 0.5D, 0.3D, 0.05D);
-                            }
-                        }
-
-                        serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
-                                net.minecraft.sounds.SoundEvents.ZOMBIE_VILLAGER_CONVERTED, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 0.8F);
-
-                        currentCooldownTicks = 1200;
-                    }
                     case ANCIENT -> {
                         net.minecraft.world.phys.HitResult hit = net.minecraft.world.entity.projectile.ProjectileUtil.getHitResultOnViewVector(
                                 entity, e -> !e.isSpectator() && e.isPickable(), 150.0D);
@@ -278,6 +229,73 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
                                 net.minecraft.sounds.SoundEvents.WARDEN_SONIC_BOOM, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
 
+                        currentCooldownTicks = 600;
+                    }
+                    case FROST -> {
+                        if (!(entity instanceof net.minecraft.world.entity.LivingEntity caster)) {
+                            break;
+                        }
+                        net.minecraft.world.entity.AreaEffectCloud frostCloud = new net.minecraft.world.entity.AreaEffectCloud(
+                                serverLevel, caster.getX(), caster.getY(), caster.getZ()
+                        ) {
+                            private int ageTicks = 0;
+
+                            @Override
+                            public void tick() {
+                                super.tick();
+
+                                if (this.level() instanceof net.minecraft.server.level.ServerLevel sLevel) {
+                                    this.ageTicks++;
+                                    if (this.ageTicks % 20 == 0) {
+                                        double currentRadius = (double) this.getRadius();
+                                        net.minecraft.world.phys.AABB area = this.getBoundingBox().inflate(currentRadius);
+                                        java.util.List targets = sLevel.getEntitiesOfClass(
+                                                net.minecraft.world.entity.LivingEntity.class,
+                                                area,
+                                                target -> target != caster && target.isAlive() && !target.isSpectator() && target.distanceToSqr(this) <= (currentRadius * currentRadius)
+                                        );
+                                        for (Object obj : targets) {
+                                            if (obj instanceof net.minecraft.world.entity.LivingEntity target) {
+                                                target.hurt(sLevel.damageSources().freeze(), 4.0F);
+                                                target.setTicksFrozen(140);
+                                                target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                                                        net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, 40, 1, false, false
+                                                ));
+                                            }
+                                        }
+                                        for (int i = 0; i < 360; i += 20) {
+                                            double angle = Math.toRadians(i);
+                                            double pX = this.getX() + Math.cos(angle) * currentRadius;
+                                            double pZ = this.getZ() + Math.sin(angle) * currentRadius;
+                                            sLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD,
+                                                    pX, this.getY() + 0.1D, pZ,
+                                                    1, 0.0D, 0.0D, 0.0D, 0.0D);
+                                        }
+                                    }
+                                }
+                            }
+                        };
+
+                        // 3. Настраиваем ванильные параметры облака
+                        frostCloud.setOwner(caster);
+                        frostCloud.setRadius(7.0F);        // Радиус ауры — 7 блоков
+                        frostCloud.setDuration(120);       // Время жизни — 6 секунд (120 тиков)
+                        frostCloud.setWaitTime(0);         // Активация мгновенная
+                        frostCloud.setRadiusPerTick(0.0F); // Радиус стабилен, круг не сжимается
+
+                        // Внутреннее наполнение круга ванильными снежинками
+                        frostCloud.setParticle(net.minecraft.core.particles.ParticleTypes.SNOWFLAKE);
+
+                        // 4. Спавним настроенное облако в мир
+                        serverLevel.addFreshEntity(frostCloud);
+
+                        // 5. Проигрываем звуки активации заклинания (лед + морозный стон)
+                        serverLevel.playSound(null, caster.getX(), caster.getY(), caster.getZ(),
+                                net.minecraft.sounds.SoundEvents.GLASS_BREAK, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 0.5F);
+                        serverLevel.playSound(null, caster.getX(), caster.getY(), caster.getZ(),
+                                net.minecraft.sounds.SoundEvents.PLAYER_HURT_FREEZE, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 0.8F);
+
+                        // 6. Устанавливаем кулдаун для свитка (например, 30 секунд = 600 тиков)
                         currentCooldownTicks = 600;
                     }
                     //это вроде ваще не добавляли никогда, но мне как-то похуй, удалять лень.

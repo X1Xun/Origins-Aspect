@@ -5,42 +5,34 @@
     "actions": [
       {
         "type": "origins:execute_command",
-        "command": "effect give @s minecraft:speed 40 2 true",
+        "command": "execute at @s run execute as @e[distance=0.01..10] run effect give @s minecraft:wither 4 1",
         "permission_level": 4
       },
       {
         "type": "origins:execute_command",
-        "command": "effect give @s minecraft:strength 40 2 true",
+        "command": "execute at @s run execute as @e[distance=0.01..10] run effect give @s minecraft:nause 20 1",
         "permission_level": 4
       },
       {
-        "type": "origins:delay",
-        "ticks": 800,
-        "action": {
-          "type": "origins:execute_command",
-          "command": "effect give @s minecraft:slowness 5 1 true",
-          "permission_level": 4
-        }
+        "type": "origins:execute_command",
+        "command": "execute at @s run execute as @e[distance=0.01..10] run effect give @s minecraft:blindness 20 1",
+        "permission_level": 4
       },
       {
-        "type": "origins:delay",
-        "ticks": 800,
-        "action": {
-          "type": "origins:execute_command",
-          "command": "effect give @s minecraft:weakness 60 2 true",
-          "permission_level": 4
-        }
+        "type": "origins:execute_command",
+        "command": "execute at @s run particle smoke ~ ~ ~ 1 1 1 0.1 10000",
+        "permission_level": 4
       }
     ]
   },
   "cooldown": 2400,
   "hud_render": {
     "should_render": true,
-    "bar_index": 9,
-    "icon_index": 9
+    "bar_index": 0,
+    "icon_index": 0
   },
   "key": {
-    "key": "key.origins.primary_active"
+    "key": "key.origins.secondary_active"
   },
   "display": {
     "name": "Режим Ярости",

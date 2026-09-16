@@ -3,7 +3,8 @@
   "cooldown": 200,
   "hud_render": {
     "should_render": true,
-    "bar_index": 4
+    "bar_index": 4,
+    "icon_index": 4
   },
   "arrow_count": 50,
   "damage": 12.0,

@@ -2,15 +2,10 @@ package com.iafenvoy.origins.content;
 
 import com.iafenvoy.origins.data.power.builtin.regular.WarlockMainPower.warlock_powers;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.InteractionResultHolder;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.Level;
+
 import java.util.List;
 
 public class WarlockScrollItem extends Item {
@@ -57,7 +52,7 @@ public class WarlockScrollItem extends Item {
     private String getPowerChatColor() {
         return switch (this.targetPower) {
             case EARTH -> "§a";
-            case UNDEAD -> "§b";
+            case FROST -> "§b";
             case INFERNAL -> "§c";
             case DRAGON -> "§d";
             case ANCIENT -> "§3";

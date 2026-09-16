@@ -9,6 +9,7 @@
   "hud_render": {
     "should_render": true,
 	"bar_index": 1,
+    "icon_index": 1,
 	"hide_when_ready": true
   },
   "key": {

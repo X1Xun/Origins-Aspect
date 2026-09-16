@@ -195,7 +195,6 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                     case DRAGON -> {
                         currentCooldownTicks = 600;
                     }
-                    //Свиток мертвеца - призыв 4-х зомби, минута
                     case ANCIENT -> {
                         net.minecraft.world.phys.HitResult hit = net.minecraft.world.entity.projectile.ProjectileUtil.getHitResultOnViewVector(
                                 entity, e -> !e.isSpectator() && e.isPickable(), 150.0D);
@@ -276,26 +275,17 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                             }
                         };
 
-                        // 3. Настраиваем ванильные параметры облака
                         frostCloud.setOwner(caster);
-                        frostCloud.setRadius(7.0F);        // Радиус ауры — 7 блоков
-                        frostCloud.setDuration(120);       // Время жизни — 6 секунд (120 тиков)
-                        frostCloud.setWaitTime(0);         // Активация мгновенная
-                        frostCloud.setRadiusPerTick(0.0F); // Радиус стабилен, круг не сжимается
-
-                        // Внутреннее наполнение круга ванильными снежинками
+                        frostCloud.setRadius(7.0F);
+                        frostCloud.setDuration(120);
+                        frostCloud.setWaitTime(0);
+                        frostCloud.setRadiusPerTick(0.0F);
                         frostCloud.setParticle(net.minecraft.core.particles.ParticleTypes.SNOWFLAKE);
-
-                        // 4. Спавним настроенное облако в мир
                         serverLevel.addFreshEntity(frostCloud);
-
-                        // 5. Проигрываем звуки активации заклинания (лед + морозный стон)
                         serverLevel.playSound(null, caster.getX(), caster.getY(), caster.getZ(),
                                 net.minecraft.sounds.SoundEvents.GLASS_BREAK, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 0.5F);
                         serverLevel.playSound(null, caster.getX(), caster.getY(), caster.getZ(),
                                 net.minecraft.sounds.SoundEvents.PLAYER_HURT_FREEZE, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 0.8F);
-
-                        // 6. Устанавливаем кулдаун для свитка (например, 30 секунд = 600 тиков)
                         currentCooldownTicks = 600;
                     }
                     //это вроде ваще не добавляли никогда, но мне как-то похуй, удалять лень.

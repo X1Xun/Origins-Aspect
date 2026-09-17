@@ -1,6 +1,7 @@
 {
 	"powers": [
-		"origins:pal_holy_bolt"
+		"origins:pal_holy_bolt",
+		"origins:pal_resistance"
 	],
 	"icon": {
 		"id": "origins:paladin_icon"

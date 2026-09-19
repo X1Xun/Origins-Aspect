@@ -4,7 +4,8 @@
 		"origins:rog_dodge",
 		"origins:rog_not_more_hearts",
 		"origins:rog_swift_sneaking",
-		"origins:rog_smoke_bomb"
+		"origins:rog_smoke_bomb",
+		"origins:alc_prevent_brews"
 	],
 	"icon": {
 		"id": "origins:rogue_icon"

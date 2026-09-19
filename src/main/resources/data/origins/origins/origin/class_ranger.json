@@ -4,6 +4,7 @@
 		"origins:ran_lunge",
 		"origins:ran_speed",
 		"origins:ran_prevent_traps",
+		"origins:alc_prevent_brews",
 		"origins:throw_ender_pearl"
 	],
 	"icon": {

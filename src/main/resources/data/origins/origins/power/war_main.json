@@ -1,7 +1,7 @@
 {
   "type": "origins:warlock_main",
   "cooldown": 1200,
-  "default_power": "ANCIENT",
+  "default_power": "EARTH",
   "hud_render": {
     "should_render_inactive": true,
     "sprite_location": "origins:textures/gui/warlock_hud.png",

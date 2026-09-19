@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "show_notification": true,
+  "category": "redstone",
+  "pattern": [
+    "XXX",
+    "XYX",
+    "XXX"
+  ],
+  "key": {
+    "X": {
+      "item": "minecraft:arrow"
+    },
+    "Y": {
+      "item": "minecraft:tnt"
+    }
+  },
+  "result": {
+    "id": "origins:explosive_arrow"
+  }
+}

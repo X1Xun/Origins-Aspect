@@ -28,5 +28,6 @@ public final class PreventPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<PreventSleepPower>> PREVENT_SLEEP = REGISTRY.register("prevent_sleep", () -> PreventSleepPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<PreventSprintingPower>> PREVENT_SPRINTING = REGISTRY.register("prevent_sprinting", () -> PreventSprintingPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<PreventBlockTriggerPower>> PREVENT_BLOCK_TRIGGER_POWER = REGISTRY.register("prevent_block_trigger_power", () -> PreventBlockTriggerPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<PreventBrewingInsertPower>> PREVENT_BREWING_INSERT_POWER = REGISTRY.register("prevent_brewing_insert", () -> PreventBrewingInsertPower.CODEC);
 
 }

@@ -3,6 +3,8 @@
 		"origins:cle_trident_ban",
 		"origins:cle_honey_ban",
 		"origins:cle_regeneration",
+		"origins:alc_prevent_brews",
+		"origins:cle_soul_bind",
 		"origins:cle_apples"
 	],
 	"icon": {

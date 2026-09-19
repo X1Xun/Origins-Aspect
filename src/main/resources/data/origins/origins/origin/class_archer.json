@@ -1,6 +1,7 @@
 {
 	"powers": [
-		"origins:anc_arrow_rain"
+		"origins:anc_arrow_rain",
+		"origins:alc_prevent_brews"
 	],
 	"icon": {
 		"id": "origins:archer_icon"

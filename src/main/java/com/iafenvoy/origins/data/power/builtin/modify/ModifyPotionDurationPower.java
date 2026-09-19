@@ -47,8 +47,8 @@ public class ModifyPotionDurationPower extends Power {
 
         ItemStack itemStack = event.getItem();
         PotionContents potionContents = itemStack.getOrDefault(net.minecraft.core.component.DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-
-        if (potionContents.hasEffects()) {
+        var list = PowerHelper.get(entity).listActive(ModifyPotionDurationPower.class);
+        if (potionContents.hasEffects() && !list.isEmpty()) {
             for (MobEffectInstance baseEffect : potionContents.getAllEffects()) {
                 if (!baseEffect.getEffect().value().isInstantenous() && baseEffect.getDuration() > 0) {
 

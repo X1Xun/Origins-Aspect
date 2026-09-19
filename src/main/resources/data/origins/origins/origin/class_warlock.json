@@ -2,6 +2,7 @@
 	"powers": [
 		"origins:throw_ender_pearl",
 		"origins:war_neutrality",
+		"origins:alc_prevent_brews",
 		"origins:war_main"
 	],
 	"icon": {

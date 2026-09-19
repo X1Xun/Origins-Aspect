@@ -6,6 +6,7 @@ import com.iafenvoy.origins.data.power.MultiplePower;
 import com.iafenvoy.origins.data.power.Power;
 import com.iafenvoy.origins.data.power.PowerRegistries;
 import com.iafenvoy.origins.data.power.builtin.regular.*;
+import com.mojang.datafixers.kinds.App;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.neoforged.neoforge.registries.DeferredHolder;
@@ -95,4 +96,7 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<WarlockMainPower>> WARLOCK_MAIN = REGISTRY.register("warlock_main", () -> WarlockMainPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<GrapplingHookPower>> GRAPPLING_HOOK = REGISTRY.register("grappling_hook", () -> GrapplingHookPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<HolyBoltPower>> HOLY_BOLT = REGISTRY.register("holy_bolt", () -> HolyBoltPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<SoulBindPower>> SOUL_BIND = REGISTRY.register("soul_bind", () -> SoulBindPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<AppleUpgradePower>> APPLE_UPGRADE = REGISTRY.register("apple_upgrade", () -> AppleUpgradePower.CODEC);
+
 }

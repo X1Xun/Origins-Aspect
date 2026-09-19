@@ -1,0 +1,12 @@
+{
+  "type": "origins:prevent_brewing_insert",
+  "name": "Неумелые руки",
+  "description": "Вы не понимаете высшую алхимию, поэтому физически не можете положить Алмаз в слот ингредиентов зельеварки!",
+  "ingredients": [
+    "minecraft:diamond"
+  ],
+  "entity_action": {
+    "type": "origins:send_message",
+    "message": "§cЗельеварка отвергает алмаз! Вы должны быть Алхимиком, чтобы использовать этот реагент."
+  }
+}

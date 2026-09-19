@@ -1,0 +1,14 @@
+{
+  "type": "origins:soul_bind",
+  "name": "Небесная Кара",
+  "description": "Призывает священную молнию на врага, на которого вы смотрите. Живые игроки получают урон, поджигаются и подсвечиваются, а Нежить получает тройной урон и оглушается.",
+  "cooldown": 1800,
+  "hud_render": {
+    "should_render": true,
+    "bar_index": 2,
+    "icon_index": 2
+  },
+  "key": {
+    "key": "key.origins.primary_active"
+  }
+}

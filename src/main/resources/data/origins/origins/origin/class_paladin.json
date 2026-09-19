@@ -1,6 +1,7 @@
 {
 	"powers": [
 		"origins:pal_holy_bolt",
+		"origins:alc_prevent_brews",
 		"origins:pal_resistance"
 	],
 	"icon": {

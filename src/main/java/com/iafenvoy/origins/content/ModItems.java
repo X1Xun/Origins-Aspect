@@ -36,6 +36,9 @@ public class ModItems {
             GrapplingHook::new,
             new Item.Properties().stacksTo(1)
     );
+    public static final DeferredHolder<Item, ExplosiveArrowItem> EXPLOSIVE_ARROW_ITEM = ITEMS.register("explosive_arrow",
+            () -> new ExplosiveArrowItem(new Item.Properties())
+    );
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
     }

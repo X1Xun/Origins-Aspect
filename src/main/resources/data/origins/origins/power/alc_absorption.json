@@ -1,0 +1,9 @@
+{
+  "type": "origins:attribute",
+  "modifier": {
+    "attribute": "minecraft:generic.max_absorption",
+    "value": 20.0,
+    "operation": "add_value"
+  },
+  "hidden": true
+}

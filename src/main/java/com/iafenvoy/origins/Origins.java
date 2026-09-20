@@ -24,10 +24,15 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.AbstractIllager;
@@ -53,9 +58,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
+import net.neoforged.neoforge.client.event.RenderNameTagEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
+import net.neoforged.neoforge.common.util.TriState;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
@@ -301,6 +308,60 @@ public final class Origins {
         }
     }
 
+    @SubscribeEvent
+    public static void renderNameTag(RenderNameTagEvent event) {
+        event.setCanRender(TriState.FALSE);
+    }
+
+    //небесная кара паладина
+    @SubscribeEvent
+    public static void onDamageDealt(LivingIncomingDamageEvent event) {
+        var entity = event.getEntity();
+        var damageSource = event.getSource();
+        var attacker = damageSource.getEntity();
+        if (attacker == null) return;
+        boolean isUndead = event.getEntity().getType().is(net.minecraft.tags.EntityTypeTags.UNDEAD);
+
+        float amount = event.getAmount();
+        var list = PowerHelper.get(attacker).listActive(HolyBoltPower.class); //тут получаем главный класс способности паладина
+        if (!list.isEmpty() && isUndead) {
+            event.setAmount(amount*2);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onDamage(LivingIncomingDamageEvent event) {
+        var victim = event.getEntity();
+        var damageSource = event.getSource();
+        var list2 = PowerHelper.get(victim).listActive(LookVelocityPower.class);
+        if (!list2.isEmpty()) {
+            if (damageSource.is(DamageTypes.FALL)) {
+                event.setAmount(event.getAmount()+2.0F);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerIncomingDamage(LivingIncomingDamageEvent event) {
+        var list2 = PowerHelper.get(event.getEntity()).listActive(ArmorBreakPower.class);
+        if (event.getEntity() instanceof ServerPlayer player) {
+            EquipmentSlot[] armorSlots = {
+                    EquipmentSlot.FEET,
+                    EquipmentSlot.LEGS,
+                    EquipmentSlot.CHEST,
+                    EquipmentSlot.HEAD
+            };
+
+            for (EquipmentSlot slot : armorSlots) {
+                ItemStack armorStack = player.getItemBySlot(slot);
+                if (!armorStack.isEmpty() && armorStack.isDamageableItem()) {
+                    armorStack.hurtAndBreak(3, player.serverLevel(), player, (item) -> {
+                        player.onEquippedItemBroken(item, slot);
+                    });
+                }
+            }
+        }
+    }
 
     private static void addStrictRecipe(PotionBrewing.Builder builder, Item inputItem, Holder<Potion> inputType, Item outputItem, Holder<Potion> outputType, Ingredient ingredient) {
         ItemStack inputStack = PotionContents.createItemStack(inputItem, inputType);
@@ -325,6 +386,10 @@ public final class Origins {
         NeoForge.EVENT_BUS.addListener(Origins::registerBrewingRecipes);
         NeoForge.EVENT_BUS.addListener(Origins::onBlockBreak);
         NeoForge.EVENT_BUS.addListener(Origins::onJrecTakeDamage);
+        NeoForge.EVENT_BUS.addListener(Origins::renderNameTag);
+        NeoForge.EVENT_BUS.addListener(Origins::onDamageDealt);
+        NeoForge.EVENT_BUS.addListener(Origins::onDamage);
+        NeoForge.EVENT_BUS.addListener(Origins::onPlayerIncomingDamage);
         ModPotions.register(bus);
         ModEffects.register(bus);
         ConfigManager.getInstance().registerServerConfigHandler(OriginsConfig.INSTANCE, ServerConfigManager.PermissionChecker.IS_OPERATOR);

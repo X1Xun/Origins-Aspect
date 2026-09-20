@@ -98,5 +98,7 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<HolyBoltPower>> HOLY_BOLT = REGISTRY.register("holy_bolt", () -> HolyBoltPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<SoulBindPower>> SOUL_BIND = REGISTRY.register("soul_bind", () -> SoulBindPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<AppleUpgradePower>> APPLE_UPGRADE = REGISTRY.register("apple_upgrade", () -> AppleUpgradePower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ArmorBreakPower>> ARMOR_BREAK = REGISTRY.register("armor_break", () -> ArmorBreakPower.CODEC);
+
 
 }

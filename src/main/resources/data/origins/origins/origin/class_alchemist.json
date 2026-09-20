@@ -2,7 +2,8 @@
 	"powers": [
 		"origins:alc_mixing_potions",
 		"origins:alc_potion_duration",
-		"origins:alc_ban_carrow"
+		"origins:alc_ban_carrow",
+		"origins:alc_absorption"
 	],
 	"icon": {
 		"id": "origins:alchemist_icon"

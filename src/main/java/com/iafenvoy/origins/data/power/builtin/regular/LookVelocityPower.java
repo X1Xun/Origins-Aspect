@@ -61,6 +61,8 @@ public class LookVelocityPower extends HasCooldownPower implements Toggleable {
     @Override
     public void toggle(@NotNull OriginDataHolder holder, String key) {
         if (!this.key.match(key) || !this.isActive(holder)) return;
+        var player = holder.getEntity();
+        if (player.level().isRainingAt(player.blockPosition())) return;
 
         this.getCooldownComponent(holder).useIfReady(() -> {
             Entity entity = holder.getEntity();

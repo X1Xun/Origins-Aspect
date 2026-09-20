@@ -25,6 +25,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
@@ -274,6 +275,32 @@ public final class Origins {
             }
         }
     }
+
+    @SubscribeEvent
+    public static void onItemUseFinish(LivingEntityUseItemEvent.Finish event) {
+        // Проверяем, что предмет съел именно игрок
+        if (event.getEntity() instanceof Player player) {
+            ItemStack cookedItem = event.getItem();
+            var list = PowerHelper.get(player).listActive(MeatBuffPower.class);
+            // Проверяем, относится ли съеденный предмет к категории "Мясо" (тег minecraft:meat)
+            if (cookedItem.is(ItemTags.MEAT) && !list.isEmpty()) {
+
+                // Создаем эффект Регенерации I (уровень 0) на 2 секунды.
+                // В Minecraft длительность указывается в тиках (1 секунда = 20 тиков, значит 2 секунды = 40 тиков).
+                MobEffectInstance regenEffect = new MobEffectInstance(
+                        MobEffects.REGENERATION,
+                        40, // Время в тиках (2 секунды)
+                        0,  // Уровень эффекта (0 равен первому уровню "I")
+                        false, // visible (невидимый в инвентаре, если true - будет иконка)
+                        true   // showParticles (показывать ли пузырьки эффекта)
+                );
+
+                // Накладываем эффект на игрока
+                player.addEffect(regenEffect);
+            }
+        }
+    }
+
     @SubscribeEvent
     public static void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
         PotionBrewing.Builder builder = event.getBuilder();
@@ -390,6 +417,8 @@ public final class Origins {
         NeoForge.EVENT_BUS.addListener(Origins::onDamageDealt);
         NeoForge.EVENT_BUS.addListener(Origins::onDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onPlayerIncomingDamage);
+        NeoForge.EVENT_BUS.addListener(Origins::onItemUseFinish);
+//        NeoForge.EVENT_BUS.addListener(Origins::onEffectApply);
         ModPotions.register(bus);
         ModEffects.register(bus);
         ConfigManager.getInstance().registerServerConfigHandler(OriginsConfig.INSTANCE, ServerConfigManager.PermissionChecker.IS_OPERATOR);

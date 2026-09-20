@@ -189,7 +189,7 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
                                 net.minecraft.sounds.SoundEvents.BONE_MEAL_USE, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
 
-                        currentCooldownTicks = 1200;
+                        currentCooldownTicks = 600;
                     }
                     //драконья. не сделана. вроде её вырезать надо.
                     case DRAGON -> {
@@ -288,7 +288,7 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                                 net.minecraft.sounds.SoundEvents.PLAYER_HURT_FREEZE, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 0.8F);
                         currentCooldownTicks = 600;
                     }
-                    //это вроде ваще не добавляли никогда, но мне как-то похуй, удалять лень.
+                    //ура это будет
                     case INFERNAL -> {
                         Vec3 lookDir = entity.getLookAngle();
                         Vec3 launchPos = entity.getEyePosition().add(lookDir.scale(1.5D));
@@ -324,22 +324,15 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         double startX = entity.getX();
                         double startY = entity.getY();
                         double startZ = entity.getZ();
-
-                        // Находим перпендикулярный вектор горизонтального направления (боковое смещение)
-                        // Нормализуем его, чтобы шаг вбок всегда был фиксированной длины (например, 1 блок)
                         Vec3 sideDir = new Vec3(-look.z, 0, look.x).normalize();
-                        double sideOffset = 1.0D; // Расстояние от центральной дорожки до боковых (в блоках)
+                        double sideOffset = 1.0D;
 
                         for (int i = 1; i <= 28; i++) {
-                            // Центр текущего шага
                             double centerX = startX + look.x * (i * 0.75D);
                             double centerZ = startZ + look.z * (i * 0.75D);
-
-                            // Массив из 3-х смещений: 0 (центр), 1 (вправо), -1 (влево)
                             double[] offsets = {0.0D, sideOffset, -sideOffset};
 
                             for (double offset : offsets) {
-                                // Рассчитываем координаты для конкретной линии (левой, центральной или правой)
                                 double spawnX = centerX + sideDir.x * offset;
                                 double spawnZ = centerZ + sideDir.z * offset;
 

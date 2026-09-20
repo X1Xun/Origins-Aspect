@@ -5,7 +5,8 @@
 		"origins:bar_rage",
 		"origins:bar_strength2",
 		"origins:alc_prevent_brews",
-		"origins:carnivore"
+		"origins:carnivore",
+		"origins:bar_meat_buff"
 	],
 	"icon": {
 		"id": "origins:barbarian_icon"

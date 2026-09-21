@@ -31,6 +31,9 @@ public class ModItems {
     public static final DeferredHolder<Item, WarlockScrollItem> SCROLL_WIND = ITEMS.register("scroll_of_wind",
             () -> new WarlockScrollItem(new Item.Properties().stacksTo(1), warlock_powers.WIND, "Ветра"));
 
+    public static final DeferredHolder<Item, Item> GRUME = ITEMS.register("grume",
+            () -> new Item(new Item.Properties()));
+
     public static final java.util.function.Supplier<Item> GRAPPLING_HOOK = ITEMS.registerItem(
             "grappling_hook",
             GrapplingHook::new,

@@ -1,7 +1,9 @@
 package com.iafenvoy.origins.data.power.builtin.regular;
 
 import com.google.common.collect.ImmutableSet;
+import com.iafenvoy.origins.ModMethods;
 import com.iafenvoy.origins.attachment.OriginDataHolder;
+import com.iafenvoy.origins.content.ModEffects;
 import com.iafenvoy.origins.data._common.KeySettings;
 import com.iafenvoy.origins.data.badge.Badge;
 import com.iafenvoy.origins.data.badge.PresetBadges;
@@ -11,11 +13,19 @@ import com.iafenvoy.origins.data.power.Toggleable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.particles.DustColorTransitionOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
+
+import static com.iafenvoy.origins.content.BloodEffect.BLOOD;
 
 public class WarlockMainPower extends HasCooldownPower implements Toggleable {
 
@@ -231,9 +241,10 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         currentCooldownTicks = 600;
                     }
                     case FROST -> {
-                        if (!(entity instanceof net.minecraft.world.entity.LivingEntity caster)) {
+                        if (!(entity instanceof Player caster)) {
                             break;
                         }
+                        boolean hasGrume = ModMethods.isGrumeInHotbar(caster);
                         net.minecraft.world.entity.AreaEffectCloud frostCloud = new net.minecraft.world.entity.AreaEffectCloud(
                                 serverLevel, caster.getX(), caster.getY(), caster.getZ()
                         ) {
@@ -241,6 +252,7 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
 
                             @Override
                             public void tick() {
+
                                 super.tick();
 
                                 if (this.level() instanceof net.minecraft.server.level.ServerLevel sLevel) {
@@ -255,11 +267,22 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                                         );
                                         for (Object obj : targets) {
                                             if (obj instanceof net.minecraft.world.entity.LivingEntity target) {
-                                                target.hurt(sLevel.damageSources().freeze(), 4.0F);
-                                                target.setTicksFrozen(140);
-                                                target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
-                                                        net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, 40, 1, false, false
-                                                ));
+                                                if(hasGrume) {
+                                                    target.hurt(sLevel.damageSources().freeze(), 4.0F);
+                                                    target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                                                            ModEffects.BLOOD, 8, 0, false, false
+                                                    ));
+                                                    target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                                                            net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, 40, 1, false, false
+                                                    ));
+                                                }
+                                                else {
+                                                    target.hurt(sLevel.damageSources().freeze(), 4.0F);
+                                                    target.setTicksFrozen(140);
+                                                    target.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                                                            net.minecraft.world.effect.MobEffects.MOVEMENT_SLOWDOWN, 40, 1, false, false
+                                                    ));
+                                                }
                                             }
                                         }
                                         for (int i = 0; i < 360; i += 20) {
@@ -275,12 +298,23 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                             }
                         };
 
-                        frostCloud.setOwner(caster);
-                        frostCloud.setRadius(7.0F);
-                        frostCloud.setDuration(120);
-                        frostCloud.setWaitTime(0);
-                        frostCloud.setRadiusPerTick(0.0F);
-                        frostCloud.setParticle(net.minecraft.core.particles.ParticleTypes.SNOWFLAKE);
+                        if(hasGrume) {
+                            Vector3f fromColor = new Vector3f(1.0F, 0.0F, 0.0F);
+                            Vector3f toColor = new Vector3f(0.5F, 0.0F, 0.0F);
+                            DustColorTransitionOptions redTransition = new DustColorTransitionOptions(fromColor, toColor, 1.0F);
+                            frostCloud.setParticle(redTransition);
+                            frostCloud.setRadius(8.0F);
+                            frostCloud.setDuration(300);
+                            frostCloud.setRadiusPerTick(1.0F);
+                        }
+                        else {
+                            frostCloud.setOwner(caster);
+                            frostCloud.setRadius(7.0F);
+                            frostCloud.setDuration(120);
+                            frostCloud.setWaitTime(0);
+                            frostCloud.setRadiusPerTick(0.0F);
+                            frostCloud.setParticle(net.minecraft.core.particles.ParticleTypes.SNOWFLAKE);
+                        }
                         serverLevel.addFreshEntity(frostCloud);
                         serverLevel.playSound(null, caster.getX(), caster.getY(), caster.getZ(),
                                 net.minecraft.sounds.SoundEvents.GLASS_BREAK, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 0.5F);
@@ -357,37 +391,69 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                     }
                     //ветрянной
                     case WIND -> {
+                        if (!(entity instanceof Player caster)) {
+                            break;
+                        }
                         Vec3 lookDir = entity.getLookAngle();
 
                         entity.setDeltaMovement(lookDir.x * 1.8D, lookDir.y, lookDir.z * 1.8D);
                         entity.hurtMarked = true;
 
-                        serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD,
-                                entity.getX(), entity.getY() + 0.5D, entity.getZ(), 40, 0.5D, 0.5D, 0.5D, 0.2D);
                         serverLevel.sendParticles(ParticleTypes.SOUL,
                                 entity.getX(), entity.getY() + 1.0D, entity.getZ(), 3, 0.2D, 0.2D, 0.2D, 0.0D);
 
-                        serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
-                                net.minecraft.sounds.SoundEvents.BREEZE_SHOOT, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 1.0F);
 
                         java.util.List<Entity> nearby = serverLevel.getEntities(entity, entity.getBoundingBox().inflate(4.0D),
                                 e -> e instanceof net.minecraft.world.entity.LivingEntity && !e.isAlliedTo(entity));
+                        boolean hasGrume = ModMethods.isGrumeInHotbar(caster);
+                        if (hasGrume) {
+                            Vector3f fromColor = new Vector3f(1.0F, 0.0F, 0.0F);
+                            Vector3f toColor = new Vector3f(0.5F, 0.0F, 0.0F);
+                            DustColorTransitionOptions redTransition = new DustColorTransitionOptions(fromColor, toColor, 1.0F);
+                            serverLevel.sendParticles(redTransition,
+                                    entity.getX(), entity.getY() + 0.5D, entity.getZ(), 40, 0.5D, 0.5D, 0.5D, 0.2D);
+                            serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+                                    SoundEvents.BLAZE_HURT, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 1.0F);
+                            currentCooldownTicks = 0;
+                        }
+                        else {
+                            serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD,
+                                    entity.getX(), entity.getY() + 0.5D, entity.getZ(), 40, 0.5D, 0.5D, 0.5D, 0.2D);
+                            serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+                                    net.minecraft.sounds.SoundEvents.BREEZE_SHOOT, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 1.0F);
+                            currentCooldownTicks = 100;
+                        }
+
 
                         for (Entity target : nearby) {
                             if (target instanceof net.minecraft.world.entity.LivingEntity livingTarget) {
                                 Vec3 knockbackDir = target.position().subtract(entity.position()).normalize();
                                 livingTarget.setDeltaMovement(knockbackDir.x * 1.2D, 0.6D, knockbackDir.z * 1.2D);
                                 livingTarget.hurtMarked = true;
+                                if (hasGrume) {
+                                    Vector3f fromColor = new Vector3f(1.0F, 0.0F, 0.0F);
+                                    Vector3f toColor = new Vector3f(0.5F, 0.0F, 0.0F);
+                                    DustColorTransitionOptions redTransition = new DustColorTransitionOptions(fromColor, toColor, 1.0F);
+                                    DamageSource customSource = entity.level().damageSources().source(BLOOD);
+                                    livingTarget.addEffect(new MobEffectInstance(ModEffects.BLOOD, 40));
+                                    livingTarget.hurt(customSource, 8.0F);
+                                    serverLevel.sendParticles(redTransition,
+                                            entity.getX(), entity.getY() + 0.5D, entity.getZ(), 40, 0.5D, 0.5D, 0.5D, 0.2D);
+                                    serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+                                            SoundEvents.BLAZE_HURT, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 1.0F);
 
-                                livingTarget.hurt(serverLevel.damageSources().fall(), 4.0F);
+                                }
+                                else {
+                                    livingTarget.hurt(serverLevel.damageSources().fall(), 4.0F);
+                                    serverLevel.sendParticles(net.minecraft.core.particles.ParticleTypes.CLOUD,
+                                            entity.getX(), entity.getY() + 0.5D, entity.getZ(), 40, 0.5D, 0.5D, 0.5D, 0.2D);
+                                    serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
+                                            net.minecraft.sounds.SoundEvents.BREEZE_SHOOT, net.minecraft.sounds.SoundSource.PLAYERS, 1.5F, 1.0F);
+                                }
                             }
                         }
-
-                        currentCooldownTicks = 100;
                     }
-
                 }
-
                 cooldownComponent.setValue(currentCooldownTicks);
             }
         }

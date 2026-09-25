@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    " CC",
+    " BC",
+    "B  "
+  ],
+  "key": {
+    "C": {
+      "item": "minecraft:iron_ingot"
+    },
+    "B": {
+      "item": "farmersdelight:rope"
+    }
+  },
+  "result": {
+    "id": "origins:grappling_hook"
+  }
+}

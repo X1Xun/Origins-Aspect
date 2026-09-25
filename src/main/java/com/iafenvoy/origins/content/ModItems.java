@@ -42,6 +42,11 @@ public class ModItems {
     public static final DeferredHolder<Item, ExplosiveArrowItem> EXPLOSIVE_ARROW_ITEM = ITEMS.register("explosive_arrow",
             () -> new ExplosiveArrowItem(new Item.Properties())
     );
+    public static final DeferredHolder<Item, BlueprintItem> GRAPPLING_HOOK_BLUEPRINT = ITEMS.register("grappling_hook_blueprint",
+            () -> new BlueprintItem(new Item.Properties().stacksTo(1), "grappling_hook"));
+
+    public static final DeferredHolder<Item, BlueprintItem> EXPLOSIVE_ARROW_BLUEPRINT = ITEMS.register("explosive_arrow_blueprint",
+            () -> new BlueprintItem(new Item.Properties().stacksTo(1), "explosive_arrow"));
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
     }

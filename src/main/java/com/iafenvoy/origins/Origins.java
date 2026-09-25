@@ -23,6 +23,9 @@ import com.iafenvoy.origins.registry.*;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
@@ -42,6 +45,10 @@ import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.CraftingMenu;
+import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.inventory.ResultSlot;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -64,16 +71,19 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.common.util.TriState;
+import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
 import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
 import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 import org.slf4j.Logger;
 
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 @Mod(Origins.MOD_ID)
@@ -274,6 +284,8 @@ public final class Origins {
                 ));
             }
         }
+
+
     }
 
     @SubscribeEvent
@@ -389,6 +401,50 @@ public final class Origins {
             }
         }
     }
+    private static final Set<String> RESTRICTED_ITEM_NAMES = Set.of(
+            "explosive_arrow",
+            "grappling_hook",
+            "diamond_sword"
+    );
+
+
+    @SubscribeEvent
+    public static void onItemCrafted(PlayerTickEvent.Post event) {
+        if (event.getEntity() instanceof ServerPlayer serverPlayer) {
+            AbstractContainerMenu menu = serverPlayer.containerMenu;
+            if (menu instanceof CraftingMenu || menu instanceof InventoryMenu) {
+                for (int i = 0; i < menu.slots.size(); i++) {
+                    var slot = menu.getSlot(i);
+                    if (slot instanceof ResultSlot) {
+                        ItemStack craftedItem = slot.getItem();
+                        Item item = craftedItem.getItem();
+                        ResourceLocation itemLocation = BuiltInRegistries.ITEM.getKey(craftedItem.getItem());
+                        String itemPath = itemLocation.getPath();
+                        if (RESTRICTED_ITEM_NAMES.contains(itemPath)) {
+                            if (item instanceof ExplosiveArrowItem) {
+                                var list = PowerHelper.get(event.getEntity()).listActive(ArrowRainPower.class);
+                                if (!list.isEmpty()) {
+                                    return;
+                                }
+                            }
+                            if (!hasPermissionToCraft(serverPlayer, itemPath)) {
+                                slot.set(ItemStack.EMPTY);
+                                serverPlayer.containerMenu.broadcastChanges();
+                                serverPlayer.sendSystemMessage(Component.literal("§cДанный предмет не был изучен вами!"), true);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean hasPermissionToCraft(ServerPlayer player, String itemName) {
+        if (player.getTags().contains("craft_" + itemName)) {
+            return true;
+        }
+        return false;
+    }
 
     private static void addStrictRecipe(PotionBrewing.Builder builder, Item inputItem, Holder<Potion> inputType, Item outputItem, Holder<Potion> outputType, Ingredient ingredient) {
         ItemStack inputStack = PotionContents.createItemStack(inputItem, inputType);
@@ -406,6 +462,7 @@ public final class Origins {
         NeoForge.EVENT_BUS.addListener(Origins::onVillagerInteract);
         NeoForge.EVENT_BUS.addListener(ModifyPotionDurationPower::onItemUseFinish);
         NeoForge.EVENT_BUS.addListener(Origins::onVillagerDeath);
+        NeoForge.EVENT_BUS.addListener(Origins::onItemCrafted);
         NeoForge.EVENT_BUS.addListener(Origins::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(Origins::onIncomingDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onChangeTarget);
@@ -418,6 +475,8 @@ public final class Origins {
         NeoForge.EVENT_BUS.addListener(Origins::onDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onPlayerIncomingDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onItemUseFinish);
+//        bus.addListener(ModEvents::onAdditionalModels);
+//        bus.addListener(ModEvents::onModelBakingCompleted);
 //        NeoForge.EVENT_BUS.addListener(Origins::onEffectApply);
         ModPotions.register(bus);
         ModEffects.register(bus);

@@ -29,19 +29,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.damagesource.DamageTypes;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Enemy;
-import net.minecraft.world.entity.monster.Vindicator;
 import net.minecraft.world.entity.npc.Villager;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -63,7 +57,6 @@ import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.event.RenderNameTagEvent;
@@ -71,10 +64,7 @@ import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.common.brewing.BrewingRecipe;
 import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 import net.neoforged.neoforge.common.util.TriState;
-import net.neoforged.neoforge.data.event.GatherDataEvent;
 import net.neoforged.neoforge.event.brewing.RegisterBrewingRecipesEvent;
-import net.neoforged.neoforge.event.entity.EntityInvulnerabilityCheckEvent;
-import net.neoforged.neoforge.event.entity.EntityJoinLevelEvent;
 import net.neoforged.neoforge.event.entity.living.*;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
@@ -175,15 +165,23 @@ public final class Origins {
     @SubscribeEvent
     public static void onFoodEat(LivingEntityUseItemEvent.Finish event) {
         LivingEntity entity = event.getEntity();
-        if (entity.level().isClientSide() || !(entity instanceof Player player)) return;
-        if (PowerHelper.get(player).listActive(AppleUpgradePower.class).isEmpty()) return;
-
         ItemStack eatenItem = event.getItem();
+        if (entity.level().isClientSide() || !(entity instanceof Player player)) return;
+        FoodProperties food = eatenItem.get(net.minecraft.core.component.DataComponents.FOOD);
+//        if (food != null) {
+//            int currentBloodLvl = player.getData(ModAttachments.BLOODY.get());
+//            int newBloodLevel = currentBloodLvl - 1;
+//            player.setData(ModAttachments.BLOODY.get(), newBloodLevel);
+//        }
+        if (PowerHelper.get(player).listActive(AppleUpgradePower.class).isEmpty()) return;
+        if (eatenItem.is(ModItems.RITUAL_KNIFE)) return;
         if (eatenItem.is(Items.APPLE)) {
             applyFoodEffectsAndStats(player, Items.GOLDEN_APPLE.getDefaultInstance());
         }
         else if (eatenItem.is(Items.GOLDEN_APPLE)) {
-            applyFoodEffectsAndStats(player, Items.ENCHANTED_GOLDEN_APPLE.getDefaultInstance());
+            int currentBloodLvl = player.getData(ModAttachments.BLOODY.get());
+            int newBloodLevel = currentBloodLvl - 1;
+            player.setData(ModAttachments.BLOODY.get(), newBloodLevel);
         }
     }
     private static void applyFoodEffectsAndStats(Player player, ItemStack targetApple) {
@@ -404,7 +402,7 @@ public final class Origins {
     private static final Set<String> RESTRICTED_ITEM_NAMES = Set.of(
             "explosive_arrow",
             "grappling_hook",
-            "diamond_sword"
+            "ritual_knife"
     );
 
 
@@ -453,7 +451,22 @@ public final class Origins {
 
         builder.addRecipe(new BrewingRecipe(strictInput, ingredient, outputStack));
     }
+
+    @SubscribeEvent
+    public static void onPlayerClone(PlayerEvent.Clone event) {
+        Player oldPlayer = event.getOriginal();
+        Player newPlayer = event.getEntity();
+        if (oldPlayer.hasData(ModAttachments.BLOODY.get())) {
+            int oldBloodLevel = oldPlayer.getData(ModAttachments.BLOODY.get());
+            newPlayer.setData(ModAttachments.BLOODY.get(), oldBloodLevel);
+        }
+        if (oldPlayer.hasData(ModAttachments.BLOOD_TIMER.get())) {
+            newPlayer.setData(ModAttachments.BLOOD_TIMER.get(), oldPlayer.getData(ModAttachments.BLOOD_TIMER.get()));
+        }
+    }
     public Origins(IEventBus bus) {
+        NeoForge.EVENT_BUS.addListener(ModEvents::onLivingTick);
+        NeoForge.EVENT_BUS.addListener(Origins::onPlayerClone);
         NeoForge.EVENT_BUS.addListener(Origins::onLivingFall);
         NeoForge.EVENT_BUS.addListener(Origins::onFoodEat);
         NeoForge.EVENT_BUS.addListener(Origins::onLevelTick);
@@ -478,6 +491,7 @@ public final class Origins {
 //        bus.addListener(ModEvents::onAdditionalModels);
 //        bus.addListener(ModEvents::onModelBakingCompleted);
 //        NeoForge.EVENT_BUS.addListener(Origins::onEffectApply);
+        ModAttachments.register(bus);
         ModPotions.register(bus);
         ModEffects.register(bus);
         ConfigManager.getInstance().registerServerConfigHandler(OriginsConfig.INSTANCE, ServerConfigManager.PermissionChecker.IS_OPERATOR);

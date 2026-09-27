@@ -100,5 +100,6 @@ public final class RegularPowers {
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<AppleUpgradePower>> APPLE_UPGRADE = REGISTRY.register("apple_upgrade", () -> AppleUpgradePower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<ArmorBreakPower>> ARMOR_BREAK = REGISTRY.register("armor_break", () -> ArmorBreakPower.CODEC);
     public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<MeatBuffPower>> MEAT_BUFF = REGISTRY.register("meat_buff", () -> MeatBuffPower.CODEC);
+    public static final DeferredHolder<MapCodec<? extends Power>, MapCodec<HolyHorseSpawnPower>> HOLY_HORSE = REGISTRY.register("holy_horse", () -> HolyHorseSpawnPower.CODEC);
 
 }

@@ -300,12 +300,13 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
 
                         if(hasGrume) {
                             Vector3f fromColor = new Vector3f(1.0F, 0.0F, 0.0F);
-                            Vector3f toColor = new Vector3f(0.5F, 0.0F, 0.0F);
+                            Vector3f toColor = new Vector3f(1.0F, 0.0F, 0.0F);
                             DustColorTransitionOptions redTransition = new DustColorTransitionOptions(fromColor, toColor, 1.0F);
                             frostCloud.setParticle(redTransition);
-                            frostCloud.setRadius(8.0F);
+                            frostCloud.setOwner(caster);
+                            frostCloud.setRadius(7.0F);
                             frostCloud.setDuration(300);
-                            frostCloud.setRadiusPerTick(1.0F);
+                            frostCloud.setRadiusPerTick(0.0F);
                         }
                         else {
                             frostCloud.setOwner(caster);

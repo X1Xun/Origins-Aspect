@@ -9,6 +9,7 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.item.Item;
@@ -60,10 +61,15 @@ public class GrapplingHook extends Item {
                         12, 0.1D, 0.1D, 0.1D, 0.1D);
                 serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
                         SoundEvents.ARROW_SHOOT, SoundSource.PLAYERS, 0.8F, 1.4F);
-
+                if (!level.isClientSide) {
+                    EquipmentSlot slot = (hand == InteractionHand.MAIN_HAND) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
+                    assert level instanceof ServerLevel;
+                    itemStack.hurtAndBreak(1, (ServerLevel) level, player, (item) -> player.onEquippedItemBroken(item, slot));
+                }
                 return InteractionResultHolder.success(itemStack);
             }
         }
+
         return InteractionResultHolder.pass(itemStack);
     }
 }

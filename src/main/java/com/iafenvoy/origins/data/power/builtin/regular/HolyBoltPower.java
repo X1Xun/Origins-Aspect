@@ -74,11 +74,6 @@ public class HolyBoltPower extends HasCooldownPower implements Toggleable {
                     entity -> !entity.isSpectator() && entity.isPickable() && entity instanceof LivingEntity, this.maxDistance);
             if (hitResult.getType() == HitResult.Type.ENTITY && hitResult instanceof net.minecraft.world.phys.EntityHitResult entityHit) {
                 if (entityHit.getEntity() instanceof LivingEntity target && target.isAlive()) {
-
-                    // Списываем кулдаун
-                    this.getCooldownComponent(holder).startCooldown();
-                    this.getCooldownComponent(holder).setValue(this.getCooldown().cooldown());
-
                     Vec3 targetPos = target.position();
                     LightningBolt lightning = net.minecraft.world.entity.EntityType.LIGHTNING_BOLT.create(serverLevel);
                     if (lightning != null) {
@@ -99,6 +94,8 @@ public class HolyBoltPower extends HasCooldownPower implements Toggleable {
                     serverLevel.sendParticles(ParticleTypes.SOUL, targetPos.x, targetPos.y + 1, targetPos.z, 15, 0.3, 0.5, 0.3, 0.05);
                     serverLevel.playSound(null, target.getX(), target.getY(), target.getZ(),
                             SoundEvents.LIGHTNING_BOLT_IMPACT, SoundSource.PLAYERS, 1.2F, 1.1F);
+                    this.getCooldownComponent(holder).startCooldown();
+                    this.getCooldownComponent(holder).setValue(this.getCooldown().cooldown());
                 }
             }
         });

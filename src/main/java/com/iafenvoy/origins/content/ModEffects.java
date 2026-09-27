@@ -31,6 +31,7 @@ public class ModEffects {
                     AttributeModifier.Operation.ADD_MULTIPLIED_TOTAL
             ));
     public static final DeferredHolder<MobEffect, MobEffect> BLOOD = MOB_EFFECTS.register("blood", BloodEffect::new);
+    public static final DeferredHolder<MobEffect, MobEffect> EXHAUSTION = MOB_EFFECTS.register("exhaustion", ExhaustionEffect::new);
     public static void register(IEventBus eventBus) {
         MOB_EFFECTS.register(eventBus);
     }

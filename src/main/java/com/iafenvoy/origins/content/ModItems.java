@@ -3,8 +3,10 @@ package com.iafenvoy.origins.content;
 import com.iafenvoy.origins.Origins; // Убедитесь, что здесь правильный импорт класса вашего мода
 import com.iafenvoy.origins.data.power.builtin.regular.WarlockMainPower.warlock_powers;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Tiers;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 public class ModItems {
@@ -33,6 +35,14 @@ public class ModItems {
 
     public static final DeferredHolder<Item, Item> GRUME = ITEMS.register("grume",
             () -> new Item(new Item.Properties()));
+
+    public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.register("ritual_knife",
+            () -> new RitualKnifeItem(Tiers.IRON, new Item.Properties()
+                    .durability(64)
+        )
+    );
+
+
 
     public static final java.util.function.Supplier<Item> GRAPPLING_HOOK = ITEMS.registerItem(
             "grappling_hook",

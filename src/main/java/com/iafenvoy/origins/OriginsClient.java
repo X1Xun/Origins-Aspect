@@ -87,12 +87,12 @@ public final class OriginsClient {
             net.minecraft.world.effect.MobEffectInstance effect = mc.player.getEffect(com.iafenvoy.origins.content.ModEffects.EXHAUSTION);
             if (effect == null) return;
             int amplifier = effect.getAmplifier();
-            if (amplifier >= 2) {
+            if (amplifier >= 1) {
                 float ticks = mc.level != null ? (float)(mc.level.getGameTime() + event.getPartialTick()) : 0.0F;
-                int levelStep = amplifier - 1;
-                float shakeIntensity = smoothAlpha * (levelStep * (levelStep * 1.5F));
+                int levelStep = amplifier;
+                float shakeIntensity = smoothAlpha * (levelStep * (levelStep * 1.0F));
                 float deltaPitch = (float) Math.sin(ticks * 0.40F) * (float) Math.cos(ticks * 0.25F) * shakeIntensity;
-                float deltaYaw = (float) Math.cos(ticks * 0.35F) * (float) Math.sin(ticks * 0.20F) * shakeIntensity;
+                float deltaYaw = (float) Math.cos(ticks * -0.35F) * (float) Math.sin(ticks * 0.20F) * shakeIntensity;
                 float deltaRoll = (float) Math.sin(ticks * 0.15F) * shakeIntensity * 0.8F;
                 event.setPitch(event.getPitch() + deltaPitch);
                 event.setYaw(event.getYaw() + deltaYaw);

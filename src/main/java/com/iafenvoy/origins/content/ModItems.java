@@ -41,6 +41,9 @@ public class ModItems {
                     .durability(64)
         )
     );
+    public static final DeferredItem<Item> REGENERATION_WAND = ITEMS.register("regeneration_wand",
+            () -> new RegenerationWandItem(new Item.Properties())
+    );
 
 
 
@@ -54,6 +57,9 @@ public class ModItems {
     );
     public static final DeferredHolder<Item, BlueprintItem> GRAPPLING_HOOK_BLUEPRINT = ITEMS.register("grappling_hook_blueprint",
             () -> new BlueprintItem(new Item.Properties().stacksTo(1), "grappling_hook"));
+
+    public static final DeferredHolder<Item, BlueprintItem> RITUAL_KNIFE_BLUEPRINT = ITEMS.register("ritual_knife_blueprint",
+            () -> new BlueprintItem(new Item.Properties().stacksTo(1), "ritual_knife"));
 
     public static final DeferredHolder<Item, BlueprintItem> EXPLOSIVE_ARROW_BLUEPRINT = ITEMS.register("explosive_arrow_blueprint",
             () -> new BlueprintItem(new Item.Properties().stacksTo(1), "explosive_arrow"));

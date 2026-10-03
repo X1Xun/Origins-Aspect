@@ -1,6 +1,4 @@
-package com.iafenvoy.origins; // ЗАМЕНИТЕ на ваш реальный пакет (например, origins.aspect.event)
-
- // ЗАМЕНИТЕ на правильный путь к вашему BlueprintItem
+package com.iafenvoy.origins;
 import com.iafenvoy.origins.content.BlueprintItem;
 import com.iafenvoy.origins.content.ExhaustionEffect;
 import com.iafenvoy.origins.content.ModAttachments;
@@ -171,7 +169,6 @@ public class ModEvents {
                     healthAttribute.setBaseValue(4);
                 }
             }
-
             else if (player.getData(ModAttachments.BLOODY.get()) >= 60) {
                 player.addEffect(new MobEffectInstance(ModEffects.EXHAUSTION, 40, 2, false, false));
                 if (healthAttribute != null) {

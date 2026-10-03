@@ -23,11 +23,14 @@ import com.iafenvoy.origins.registry.*;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -51,6 +54,7 @@ import net.minecraft.world.item.alchemy.PotionBrewing;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.item.trading.MerchantOffer;
 import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
@@ -402,7 +406,8 @@ public final class Origins {
     private static final Set<String> RESTRICTED_ITEM_NAMES = Set.of(
             "explosive_arrow",
             "grappling_hook",
-            "ritual_knife"
+            "ritual_knife",
+            "regeneration_wand"
     );
 
 
@@ -425,10 +430,16 @@ public final class Origins {
                                     return;
                                 }
                             }
+                            if (item instanceof RegenerationWandItem) {
+                                var list = PowerHelper.get(event.getEntity()).listActive(SoulBindPower.class);
+                                if (!list.isEmpty()) {
+                                    return;
+                                }
+                            }
                             if (!hasPermissionToCraft(serverPlayer, itemPath)) {
                                 slot.set(ItemStack.EMPTY);
                                 serverPlayer.containerMenu.broadcastChanges();
-                                serverPlayer.sendSystemMessage(Component.literal("§cДанный предмет не был изучен вами!"), true);
+                                serverPlayer.sendSystemMessage(Component.literal("§cДанный предмет не был изучен вами, или у вас нет способности к его созданию!"), true);
                             }
                         }
                     }
@@ -464,10 +475,103 @@ public final class Origins {
             newPlayer.setData(ModAttachments.BLOOD_TIMER.get(), oldPlayer.getData(ModAttachments.BLOOD_TIMER.get()));
         }
     }
+
+    @SubscribeEvent
+    public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
+        var list = PowerHelper.get(event.getEntity()).listActive(ArrowRainPower.class);
+        if (list.isEmpty()) {
+            return;
+        }
+        if (event.getSlot() == EquipmentSlot.MAINHAND) {
+            ItemStack newStack = event.getTo();
+            ItemStack oldStack = event.getFrom();
+            var registryAccess = event.getEntity().level().registryAccess();
+            var enchantmentRegistry = registryAccess.registryOrThrow(Registries.ENCHANTMENT);
+            var powerEnchantmentHolder = enchantmentRegistry.getHolder(net.minecraft.world.item.enchantment.Enchantments.POWER);
+            if (powerEnchantmentHolder.isPresent()) {
+                var powerEnchant = powerEnchantmentHolder.get();
+                if (newStack.is(Items.BOW)) {
+                    ItemEnchantments enchantments = newStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+                    if (enchantments.getLevel(powerEnchant) == 5) {
+                        ItemEnchantments.Mutable mutableEnchants = new ItemEnchantments.Mutable(enchantments);
+                        mutableEnchants.set(powerEnchant, 6);
+                        newStack.set(DataComponents.ENCHANTMENTS, mutableEnchants.toImmutable());
+                    }
+                }
+                if (oldStack.is(Items.BOW)) {
+                    ItemEnchantments enchantments = oldStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
+
+                    if (enchantments.getLevel(powerEnchant) == 6) {
+                        ItemEnchantments.Mutable mutableEnchants = new ItemEnchantments.Mutable(enchantments);
+                        mutableEnchants.set(powerEnchant, 5);
+
+                        oldStack.set(DataComponents.ENCHANTMENTS, mutableEnchants.toImmutable());
+                    }
+                }
+            }
+        }
+    }
+    @SubscribeEvent
+    public static void onLivingIncomingDamage(LivingIncomingDamageEvent event) {
+        if (event.getSource().getEntity() instanceof Player player) {
+            ItemStack mainHandItem = player.getMainHandItem();
+            var list = PowerHelper.get(event.getSource().getEntity()).listActive(ArrowRainPower.class);
+            if (list.isEmpty()) {
+                return;
+            }
+            if (!mainHandItem.is(Items.BOW) && !mainHandItem.is(Items.CROSSBOW)) {
+                float originalDamage = event.getContainer().getNewDamage();
+                float minReduction = 1.5F;
+                float maxReduction = 2.0F;
+                float randomReduction = minReduction + player.getRandom().nextFloat() * (maxReduction - minReduction);
+                float reducedDamage = originalDamage / randomReduction;
+                event.getContainer().setNewDamage(reducedDamage);
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onLivingIncomingDamage2(LivingIncomingDamageEvent event) {
+        var list = PowerHelper.get(event.getEntity()).listActive(ArrowRainPower.class);
+        if (list.isEmpty()) {
+            return;
+        }
+        if (event.getEntity() instanceof Player) {
+            boolean isFire = event.getSource().is(DamageTypeTags.IS_FIRE);
+            boolean isFreezing = event.getSource().is(DamageTypeTags.IS_FREEZING);
+
+            if (isFire || isFreezing) {
+                float originalDamage = event.getContainer().getNewDamage();
+                event.getContainer().setNewDamage(originalDamage * 2.0F);
+            }
+        }
+    }
+    @SubscribeEvent
+    public static void onPlayerTick2(PlayerTickEvent.Post event) {
+        Player player = event.getEntity();
+        var list = PowerHelper.get(event.getEntity()).listActive(ArrowRainPower.class);
+        if (list.isEmpty()) {
+            return;
+        }
+        if (!player.level().isClientSide) {
+            if (player.isInPowderSnow) {
+                int currentTicks = player.getTicksFrozen();
+                int maxTicks = player.getTicksRequiredToFreeze();
+                if (currentTicks < maxTicks) {
+                    player.setTicksFrozen(currentTicks + 1);
+                }
+            }
+        }
+    }
+
     public Origins(IEventBus bus) {
         NeoForge.EVENT_BUS.addListener(ModEvents::onLivingTick);
+        NeoForge.EVENT_BUS.addListener(Origins::onLivingIncomingDamage);
+        NeoForge.EVENT_BUS.addListener(Origins::onLivingIncomingDamage2);
+        NeoForge.EVENT_BUS.addListener(Origins::onPlayerTick2);
         NeoForge.EVENT_BUS.addListener(Origins::onPlayerClone);
         NeoForge.EVENT_BUS.addListener(Origins::onLivingFall);
+        NeoForge.EVENT_BUS.addListener(Origins::onEquipmentChange);
         NeoForge.EVENT_BUS.addListener(Origins::onFoodEat);
         NeoForge.EVENT_BUS.addListener(Origins::onLevelTick);
         NeoForge.EVENT_BUS.addListener(ExplosiveArrowHandler::onGetProjectile);

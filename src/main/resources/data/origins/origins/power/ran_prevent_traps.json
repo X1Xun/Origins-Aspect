@@ -1,7 +1,7 @@
 {
   "type": "origins:prevent_block_trigger_power",
-  "name": "Легкий шаг",
-  "description": "Ваш шаг настолько легок и точен, что нажимные плиты и нити-растяжки в данжах не реагируют на ваше присутствие.",
+  "name": "Тень",
+  "description": "Вы не активируете механизмы с ловушками, а также скалк-сенсоры",
   "entity_action": {
     "type": "origins:execute_command",
     "command": "particle minecraft:ambient_entity_effect ~ ~0.1 ~ 0.2 0.1 0.2 0 5"

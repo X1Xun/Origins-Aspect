@@ -1,0 +1,8 @@
+{
+  "render_type": "minecraft:translucent",
+  "parent": "minecraft:block/carpet",
+  "textures": {
+    "particle": "origins:block/chalk_rune_1",
+    "wool": "origins:block/chalk_rune_1"
+  }
+}

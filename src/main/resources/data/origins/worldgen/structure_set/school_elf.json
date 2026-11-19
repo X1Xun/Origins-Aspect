@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:school_elf",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92010,
+    "spacing": 34,
+    "separation": 8,
+    "spread_type": "triangular"
+  }
+}

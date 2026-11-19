@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:giant",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92008,
+    "spacing": 56,
+    "separation": 20,
+    "spread_type": "triangular"
+  }
+}

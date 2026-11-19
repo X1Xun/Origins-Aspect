@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:shack",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92002,
+    "spacing": 31,
+    "separation": 10,
+    "spread_type": "triangular"
+  }
+}

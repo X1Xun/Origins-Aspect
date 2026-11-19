@@ -5,5 +5,7 @@
     "ingredient": {
       "item": "minecraft:golden_carrot"
     }
-  }
+  },
+  "name": "Я не буду это кушать",
+  "description": "Золотая морковь вызывает у вас отвращение. Как вы это едите?"
 }

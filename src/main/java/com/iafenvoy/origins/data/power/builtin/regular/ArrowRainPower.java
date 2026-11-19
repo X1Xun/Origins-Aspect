@@ -1,6 +1,7 @@
 package com.iafenvoy.origins.data.power.builtin.regular;
 
 import com.google.common.collect.ImmutableSet;
+import com.iafenvoy.origins.ModMethods;
 import com.iafenvoy.origins.attachment.OriginDataHolder;
 import com.iafenvoy.origins.data._common.KeySettings;
 import com.iafenvoy.origins.data.badge.Badge;
@@ -15,6 +16,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Arrow;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.BlockHitResult;
@@ -88,17 +90,26 @@ public class ArrowRainPower extends HasCooldownPower implements Toggleable {
 
             RandomSource random = serverLevel.getRandom();
 
-            for (int i = 0; i < this.arrowCount; i++) {
-                double offsetX = (random.nextDouble() - 0.5D) * 6.0D;
-                double offsetZ = (random.nextDouble() - 0.5D) * 6.0D;
-                double offsetY = 14.0D + random.nextDouble() * 5.0D;
+            int arrow_count = this.arrowCount;
+            double damagez = this.damage;
+            boolean hasGrume = ModMethods.isGrumeInHotbar((Player) holder.getEntity());
+            if (hasGrume) {
+                arrow_count = arrowCount *2;
+                damagez = damagez *2;
+            }
+
+
+            for (int i = 0; i < arrow_count; i++) {
+                double offsetX = (random.nextDouble() - 0.5D) * 2.0D;
+                double offsetZ = (random.nextDouble() - 0.5D) * 2.0D;
+                double offsetY = 14.0D + random.nextDouble() * 1.5D;
 
                 Vec3 spawnPos = new Vec3(strikePoint.x + offsetX, strikePoint.y + offsetY, strikePoint.z + offsetZ);
 
                 Arrow arrow = new Arrow(net.minecraft.world.entity.EntityType.ARROW, serverLevel);
                 arrow.setPos(spawnPos.x, spawnPos.y, spawnPos.z);
                 arrow.setOwner(player);
-                arrow.setBaseDamage(this.damage);
+                arrow.setBaseDamage(damagez);
                 arrow.pickup = Arrow.Pickup.DISALLOWED;
 
                 double motionX = (random.nextDouble() - 0.5D) * 0.2D;

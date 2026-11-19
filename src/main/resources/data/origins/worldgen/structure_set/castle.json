@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:castle",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92003,
+    "spacing": 44,
+    "separation": 15,
+    "spread_type": "triangular"
+  }
+}

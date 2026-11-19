@@ -1,0 +1,14 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "origins:shool_elf",
+        "processors": "origins:ignore_air",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ]
+}

@@ -1,0 +1,139 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 6,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "conditions": [
+            {
+              "condition": "minecraft:all_of",
+              "terms": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                },
+                {
+                  "condition": "minecraft:value_check",
+                  "value": {
+                    "type": "minecraft:score",
+                    "target": "this",
+                    "score": "kills"
+                  },
+                  "range": {
+                    "min": 20,
+                    "max": 27
+                  }
+                }
+              ]
+            }
+          ],
+          "functions": [
+            {
+              "function": "minecraft:set_name",
+              "name": "Хватит!",
+              "target": "item_name"
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "pages": [
+                {
+                  "raw": "Я не советую продолжать в том же духе. Убийства - это плохо. Ты прекрасно понимаешь о чём я. Ты убил уже больше 20 людей. Ты предупреждён."
+                }
+              ],
+              "mode": "replace_all"
+            }
+          ]
+        },
+        {
+          "type": "minecraft:loot_table",
+          "name": "",
+          "value": "minecraft:chests/igloo_chest",
+          "quality": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.14
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:blaze_powder",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.1
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "emerald",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.59
+            }
+          ],
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": 3,
+              "add": true,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.1
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_count",
+              "count": 2,
+              "add": true,
+              "conditions": [
+                {
+                  "condition": "minecraft:random_chance",
+                  "chance": 0.3
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "origins:scroll_of_earth",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.17
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_ingot",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.75
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "diamond",
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.3
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

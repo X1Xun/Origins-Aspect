@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "pattern": [
+    "  A",
+    " B ",
+    "B  "
+  ],
+  "key": {
+    "B": {
+      "item": "minecraft:gold_ingot"
+    },
+    "A": {
+      "item": "minecraft:emerald"
+    }
+  },
+  "result": {
+    "id": "origins:regeneration_wand"
+  }
+}

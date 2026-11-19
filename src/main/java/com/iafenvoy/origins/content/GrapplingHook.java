@@ -64,7 +64,8 @@ public class GrapplingHook extends Item {
                 if (!level.isClientSide) {
                     EquipmentSlot slot = (hand == InteractionHand.MAIN_HAND) ? EquipmentSlot.MAINHAND : EquipmentSlot.OFFHAND;
                     assert level instanceof ServerLevel;
-                    itemStack.hurtAndBreak(1, (ServerLevel) level, player, (item) -> player.onEquippedItemBroken(item, slot));
+                    itemStack.hurtAndBreak(1, serverLevel, player, (item) -> player.onEquippedItemBroken(item, slot));
+
                 }
                 return InteractionResultHolder.success(itemStack);
             }

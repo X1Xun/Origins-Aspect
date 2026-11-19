@@ -1,6 +1,5 @@
 {
 	"powers": [
-		"origins:webbing",
 		"origins:alc_prevent_brews"
 	],
 	"icon": {

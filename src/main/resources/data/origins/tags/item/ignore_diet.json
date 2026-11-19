@@ -1,6 +1,7 @@
 {
 	"replace": false,
 	"values": [
-		"minecraft:ominous_bottle"
+		"minecraft:ominous_bottle",
+		"farmersdelight:fried_egg"
 	]
 }

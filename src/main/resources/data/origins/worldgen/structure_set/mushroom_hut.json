@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:mushroom_hut",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92007,
+    "spacing": 17,
+    "separation": 6,
+    "spread_type": "triangular"
+  }
+}

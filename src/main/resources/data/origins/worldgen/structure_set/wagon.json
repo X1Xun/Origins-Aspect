@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:wagon",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92005,
+    "spacing": 19,
+    "separation": 6,
+    "spread_type": "triangular"
+  }
+}

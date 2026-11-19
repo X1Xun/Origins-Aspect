@@ -1,6 +1,7 @@
 package com.iafenvoy.origins.data.power.builtin.regular;
 
 import com.google.common.collect.ImmutableSet;
+import com.iafenvoy.origins.ModMethods;
 import com.iafenvoy.origins.attachment.OriginDataHolder;
 import com.iafenvoy.origins.data._common.KeySettings;
 import com.iafenvoy.origins.data.badge.Badge;
@@ -11,10 +12,13 @@ import com.iafenvoy.origins.data.power.Toggleable;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.core.particles.DustColorTransitionOptions;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.joml.Vector3f;
 
 public class LookVelocityPower extends HasCooldownPower implements Toggleable {
     public static final MapCodec<LookVelocityPower> CODEC = RecordCodecBuilder.mapCodec(i -> i.group(
@@ -68,17 +72,30 @@ public class LookVelocityPower extends HasCooldownPower implements Toggleable {
             Entity entity = holder.getEntity();
 
             if (entity != null && entity.level() instanceof ServerLevel serverLevel) {
-                this.getCooldownComponent(holder).startCooldown();
-                int cooldownTicks = this.getCooldown().cooldown();
-                this.getCooldownComponent(holder).setValue(cooldownTicks);
 
                 Vec3 lookAngle = entity.getLookAngle();
-                entity.setDeltaMovement(entity.getDeltaMovement().add(
-                        lookAngle.x * this.strength,
-                        lookAngle.y * this.strength * 0.5D,
-                        lookAngle.z * this.strength
-                ));
-
+                boolean hasGrume = ModMethods.isGrumeInHotbar((Player) player);
+                if (hasGrume){
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(
+                            lookAngle.x * this.strength * 2,
+                            lookAngle.y * this.strength,
+                            lookAngle.z * this.strength * 2
+                    ));
+                    Vector3f fromColor = new Vector3f(1.0F, 0.0F, 0.0F);
+                    Vector3f toColor = new Vector3f(1.0F, 0.0F, 0.0F);
+                    DustColorTransitionOptions redTransition = new DustColorTransitionOptions(fromColor, toColor, 1.0F);
+                    serverLevel.sendParticles(redTransition, player.getX(), player.getY(), player.getZ(), 10, 1, 1, 1, 0.1);
+                }
+                else {
+                    entity.setDeltaMovement(entity.getDeltaMovement().add(
+                            lookAngle.x * this.strength,
+                            lookAngle.y * this.strength * 0.5D,
+                            lookAngle.z * this.strength
+                    ));
+                    this.getCooldownComponent(holder).startCooldown();
+                    int cooldownTicks = this.getCooldown().cooldown();
+                    this.getCooldownComponent(holder).setValue(cooldownTicks);
+                }
                 entity.hurtMarked = true;
             }
         });

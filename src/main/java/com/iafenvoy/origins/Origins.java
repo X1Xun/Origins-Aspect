@@ -3,6 +3,10 @@ package com.iafenvoy.origins;
 import com.iafenvoy.jupiter.ConfigManager;
 import com.iafenvoy.jupiter.ServerConfigManager;
 import com.iafenvoy.origins.attachment.PowerHelper;
+import com.iafenvoy.origins.border.BorderConfig;
+import com.iafenvoy.origins.border.BorderEventHandler;
+import com.iafenvoy.origins.border.BorderSaveData;
+import com.iafenvoy.origins.border.BorderSyncPacket;
 import com.iafenvoy.origins.config.OriginsConfig;
 import com.iafenvoy.origins.content.*;
 import com.iafenvoy.origins.data.action.builtin.BiEntityActions;
@@ -20,7 +24,10 @@ import com.iafenvoy.origins.data.power.builtin.prevent.PreventBrewingInsertPower
 import com.iafenvoy.origins.data.power.builtin.regular.*;
 import com.iafenvoy.origins.data.power.component.BuiltinComponents;
 import com.iafenvoy.origins.registry.*;
+import com.iafenvoy.origins.rituals.LaunchpadManager;
+import com.iafenvoy.origins.rituals.ModRituals;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
@@ -61,7 +68,10 @@ import net.minecraft.world.level.block.entity.BrewingStandBlockEntity;
 import net.minecraft.world.phys.AABB;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.ModLoadingContext;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
+import net.neoforged.neoforge.client.event.RenderBlockScreenEffectEvent;
 import net.neoforged.neoforge.client.event.RenderLivingEvent;
 import net.neoforged.neoforge.client.event.RenderNameTagEvent;
 import net.neoforged.neoforge.common.NeoForge;
@@ -74,6 +84,9 @@ import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.tick.LevelTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
+import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
+import net.neoforged.neoforge.network.registration.PayloadRegistrar;
 import org.slf4j.Logger;
 
 import java.util.List;
@@ -92,25 +105,25 @@ public final class Origins {
         }
     }
 
-    @SubscribeEvent
-    public static void onVillagerInteract(PlayerInteractEvent.EntityInteract event) {
-        if (event.getTarget() instanceof Villager villager) {
-            Player player = event.getEntity();
-            var list = PowerHelper.get(player).listActive(WarlockMainPower.class);
-            if (!list.isEmpty()) {
-                if (!player.level().isClientSide()) {
-                    MerchantOffers offers = villager.getOffers();
-                    for (MerchantOffer offer : offers) {
-                        int baseCost = offer.getBaseCostA().getCount();
-                        int priceIncrease = (int) (baseCost);
-                        offer.setSpecialPriceDiff(priceIncrease);
-                    }
-                }
-            } else {
-
-            }
-        }
-    }
+//    @SubscribeEvent
+//    public static void onVillagerInteract(PlayerInteractEvent.EntityInteract event) {
+//        if (event.getTarget() instanceof Villager villager) {
+//            Player player = event.getEntity();
+//            var list = PowerHelper.get(player).listActive(WarlockMainPower.class);
+//            if (!list.isEmpty()) {
+//                if (!player.level().isClientSide()) {
+//                    MerchantOffers offers = villager.getOffers();
+//                    for (MerchantOffer offer : offers) {
+//                        int baseCost = offer.getBaseCostA().getCount();
+//                        int priceIncrease = (int) (baseCost);
+//                        offer.setSpecialPriceDiff(priceIncrease);
+//                    }
+//                }
+//            } else {
+//
+//            }
+//        }
+//    }
 
     @SubscribeEvent
     public static void onIncomingDamage(LivingIncomingDamageEvent event) {
@@ -146,25 +159,25 @@ public final class Origins {
         }
     }
 
-    @SubscribeEvent
-    public static void onVillagerDeath(LivingDeathEvent event) {
-        try {
-            Player player = (Player) event.getEntity().getLastAttacker();
-            var list = PowerHelper.get(player).listActive(HolyBoltPower.class);
-            if (!list.isEmpty()) {
-                if (event.getEntity() instanceof Villager villager) {
-                    if (event.getSource().getEntity() instanceof Player player1) {
-                        player.hurt(player.damageSources().playerAttack(player1), 3.0F);
-                    }
-                }
-            } else {
-
-            }
-        }
-        catch (Exception ex){
-
-        }
-    }
+//    @SubscribeEvent
+//    public static void onVillagerDeath(LivingDeathEvent event) {
+//        try {
+//            Player player = (Player) event.getEntity().getLastAttacker();
+//            var list = PowerHelper.get(player).listActive(HolyBoltPower.class);
+//            if (!list.isEmpty()) {
+//                if (event.getEntity() instanceof Villager villager) {
+//                    if (event.getSource().getEntity() instanceof Player player1) {
+//                        player.hurt(player.damageSources().playerAttack(player1), 3.0F);
+//                    }
+//                }
+//            } else {
+//
+//            }
+//        }
+//        catch (Exception ex){
+//
+//        }
+//    }
 
     @SubscribeEvent
     public static void onFoodEat(LivingEntityUseItemEvent.Finish event) {
@@ -224,6 +237,8 @@ public final class Origins {
             }
         }
     }
+
+
 
     @SubscribeEvent
     public static void onLevelTick(LevelTickEvent.Post event) {
@@ -286,8 +301,6 @@ public final class Origins {
                 ));
             }
         }
-
-
     }
 
     @SubscribeEvent
@@ -319,10 +332,16 @@ public final class Origins {
     public static void registerBrewingRecipes(RegisterBrewingRecipesEvent event) {
         PotionBrewing.Builder builder = event.getBuilder();
         Ingredient diamond = Ingredient.of(Items.DIAMOND);
+        Ingredient feather = Ingredient.of(Items.FEATHER);
+        Ingredient glowstone = Ingredient.of(Items.GLOWSTONE_DUST);
+        Ingredient coal = Ingredient.of(Items.COAL);
         registerStrictSet(builder, Potions.STRONG_STRENGTH, ModPotions.STRENGTH_3.getDelegate(), diamond);
         registerStrictSet(builder, Potions.STRONG_REGENERATION, ModPotions.REGENERATION_3.getDelegate(), diamond);
         registerStrictSet(builder, Potions.STRONG_LEAPING, ModPotions.LEAPING_3.getDelegate(), diamond);
         registerStrictSet(builder, Potions.STRONG_SWIFTNESS, ModPotions.SWIFTNESS_3.getDelegate(), diamond);
+        registerStrictSet(builder, Potions.AWKWARD, ModPotions.LOW_GRAVITY.getDelegate(), feather);
+        registerStrictSet(builder, Potions.AWKWARD, ModPotions.HIGH_GRAVITY.getDelegate(), coal);
+        registerStrictSet(builder, ModPotions.LOW_GRAVITY, ModPotions.NO_GRAVITY.getDelegate(), glowstone);
     }
 
     private static void registerStrictSet(PotionBrewing.Builder builder, Holder<Potion> inputType, Holder<Potion> outputType, Ingredient ingredient) {
@@ -349,10 +368,10 @@ public final class Origins {
         }
     }
 
-    @SubscribeEvent
-    public static void renderNameTag(RenderNameTagEvent event) {
-        event.setCanRender(TriState.FALSE);
-    }
+//    @SubscribeEvent
+//    public static void renderNameTag(RenderNameTagEvent event) {
+//        event.setCanRender(TriState.FALSE);
+//    }
 
     //небесная кара паладина
     @SubscribeEvent
@@ -385,6 +404,7 @@ public final class Origins {
     @SubscribeEvent
     public static void onPlayerIncomingDamage(LivingIncomingDamageEvent event) {
         var list2 = PowerHelper.get(event.getEntity()).listActive(ArmorBreakPower.class);
+        if (list2.isEmpty()) return;
         if (event.getEntity() instanceof ServerPlayer player) {
             EquipmentSlot[] armorSlots = {
                     EquipmentSlot.FEET,
@@ -463,18 +483,18 @@ public final class Origins {
         builder.addRecipe(new BrewingRecipe(strictInput, ingredient, outputStack));
     }
 
-    @SubscribeEvent
-    public static void onPlayerClone(PlayerEvent.Clone event) {
-        Player oldPlayer = event.getOriginal();
-        Player newPlayer = event.getEntity();
-        if (oldPlayer.hasData(ModAttachments.BLOODY.get())) {
-            int oldBloodLevel = oldPlayer.getData(ModAttachments.BLOODY.get());
-            newPlayer.setData(ModAttachments.BLOODY.get(), oldBloodLevel);
-        }
-        if (oldPlayer.hasData(ModAttachments.BLOOD_TIMER.get())) {
-            newPlayer.setData(ModAttachments.BLOOD_TIMER.get(), oldPlayer.getData(ModAttachments.BLOOD_TIMER.get()));
-        }
-    }
+//    @SubscribeEvent
+//    public static void onPlayerClone(PlayerEvent.Clone event) {
+//        Player oldPlayer = event.getOriginal();
+//        Player newPlayer = event.getEntity();
+//        if (oldPlayer.hasData(ModAttachments.BLOODY.get())) {
+//            int oldBloodLevel = oldPlayer.getData(ModAttachments.BLOODY.get());
+//            newPlayer.setData(ModAttachments.BLOODY.get(), oldBloodLevel);
+//        }
+//        if (oldPlayer.hasData(ModAttachments.BLOOD_TIMER.get())) {
+//            newPlayer.setData(ModAttachments.BLOOD_TIMER.get(), oldPlayer.getData(ModAttachments.BLOOD_TIMER.get()));
+//        }
+//    }
 
     @SubscribeEvent
     public static void onEquipmentChange(LivingEquipmentChangeEvent event) {
@@ -521,8 +541,8 @@ public final class Origins {
             }
             if (!mainHandItem.is(Items.BOW) && !mainHandItem.is(Items.CROSSBOW)) {
                 float originalDamage = event.getContainer().getNewDamage();
-                float minReduction = 1.5F;
-                float maxReduction = 2.0F;
+                float minReduction = 1.2F;
+                float maxReduction = 1.5F;
                 float randomReduction = minReduction + player.getRandom().nextFloat() * (maxReduction - minReduction);
                 float reducedDamage = originalDamage / randomReduction;
                 event.getContainer().setNewDamage(reducedDamage);
@@ -563,41 +583,89 @@ public final class Origins {
             }
         }
     }
+    @net.neoforged.bus.api.SubscribeEvent
+    public static void onPlayerLoggedIn(net.neoforged.neoforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            // Читаем актуальные координаты барьера прямо из нашего TOML-конфига
+            int minX = com.iafenvoy.origins.border.BorderConfig.getMinX();
+            int minZ = com.iafenvoy.origins.border.BorderConfig.getMinZ();
+            int maxX = com.iafenvoy.origins.border.BorderConfig.getMaxX();
+            int maxZ = com.iafenvoy.origins.border.BorderConfig.getMaxZ();
 
-    public Origins(IEventBus bus) {
+            // Отправляем пакет синхронизации конкретно этому игроку
+            net.neoforged.neoforge.network.PacketDistributor.sendToPlayer(serverPlayer,
+                    new com.iafenvoy.origins.border.BorderSyncPacket(minX, minZ, maxX, maxZ)
+            );
+        }
+        // Дальше идет твой остальной старый код ивента, если он там был...
+    }
+
+
+
+    public Origins(IEventBus bus, net.neoforged.fml.ModContainer container) {
+
+        NeoForge.EVENT_BUS.addListener(LivingFallEvent.class, event -> {
+            if (event.getEntity() instanceof Player player) {
+                if (!PhaseCheck.canPhase(player)) return;
+                if (PhaseCheck.canPhase(player)) {
+                    event.setDistance(0.0F);
+                    event.setDamageMultiplier(0.0F);
+                    event.setCanceled(true);
+                }
+            }
+        });
+        bus.addListener(ModNetworkEvents::registerNetwork);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(Origins::onPlayerLoggedIn);
+//        bus.addListener(this::registerNetwork);
+        NeoForge.EVENT_BUS.addListener(PhaseModeHandler::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(BorderEventHandler::onTick);
         NeoForge.EVENT_BUS.addListener(ModEvents::onLivingTick);
+        NeoForge.EVENT_BUS.addListener(ModEvents::onAttackKey);
+        NeoForge.EVENT_BUS.addListener(ModEvents::onClientTick);
+        ModBlocks.BLOCKS.register(bus);
+        NeoForge.EVENT_BUS.addListener(ModEvents::onCandleInteract);
+        NeoForge.EVENT_BUS.addListener(ModEvents::onEntityTick);
+        NeoForge.EVENT_BUS.addListener(ModEvents::onPlayerDamage);
+        NeoForge.EVENT_BUS.addListener(BloodMistEffect::onEffectExpired);
+        NeoForge.EVENT_BUS.addListener(BloodMistEffect::onEffectRemoved);
+        ModRituals.register();
         NeoForge.EVENT_BUS.addListener(Origins::onLivingIncomingDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onLivingIncomingDamage2);
         NeoForge.EVENT_BUS.addListener(Origins::onPlayerTick2);
-        NeoForge.EVENT_BUS.addListener(Origins::onPlayerClone);
+//        NeoForge.EVENT_BUS.addListener(Origins::onPlayerClone);
         NeoForge.EVENT_BUS.addListener(Origins::onLivingFall);
         NeoForge.EVENT_BUS.addListener(Origins::onEquipmentChange);
         NeoForge.EVENT_BUS.addListener(Origins::onFoodEat);
         NeoForge.EVENT_BUS.addListener(Origins::onLevelTick);
         NeoForge.EVENT_BUS.addListener(ExplosiveArrowHandler::onGetProjectile);
         NeoForge.EVENT_BUS.addListener(ExplosiveArrowHandler::onProjectileImpact);
-        NeoForge.EVENT_BUS.addListener(Origins::onVillagerInteract);
+//        NeoForge.EVENT_BUS.addListener(Origins::onVillagerInteract);
         NeoForge.EVENT_BUS.addListener(ModifyPotionDurationPower::onItemUseFinish);
-        NeoForge.EVENT_BUS.addListener(Origins::onVillagerDeath);
+        NeoForge.EVENT_BUS.addListener(LaunchpadManager::onServerTick);
+//        NeoForge.EVENT_BUS.addListener(Origins::onVillagerDeath);
         NeoForge.EVENT_BUS.addListener(Origins::onItemCrafted);
         NeoForge.EVENT_BUS.addListener(Origins::onPlayerTick);
+        NeoForge.EVENT_BUS.addListener(ModEvents::onXpDrop);
         NeoForge.EVENT_BUS.addListener(Origins::onIncomingDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onChangeTarget);
         NeoForge.EVENT_BUS.addListener(Origins::onRenderLiving);
         NeoForge.EVENT_BUS.addListener(Origins::registerBrewingRecipes);
         NeoForge.EVENT_BUS.addListener(Origins::onBlockBreak);
         NeoForge.EVENT_BUS.addListener(Origins::onJrecTakeDamage);
-        NeoForge.EVENT_BUS.addListener(Origins::renderNameTag);
+//        NeoForge.EVENT_BUS.addListener(Origins::renderNameTag);
         NeoForge.EVENT_BUS.addListener(Origins::onDamageDealt);
         NeoForge.EVENT_BUS.addListener(Origins::onDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onPlayerIncomingDamage);
         NeoForge.EVENT_BUS.addListener(Origins::onItemUseFinish);
+//        NeoForge.EVENT_BUS.addListener(ModEvents::onAnchorUse);
 //        bus.addListener(ModEvents::onAdditionalModels);
 //        bus.addListener(ModEvents::onModelBakingCompleted);
 //        NeoForge.EVENT_BUS.addListener(Origins::onEffectApply);
         ModAttachments.register(bus);
+        OriginsSounds.register(bus);
         ModPotions.register(bus);
         ModEffects.register(bus);
+        ModLootModifiers.register(bus);
         ConfigManager.getInstance().registerServerConfigHandler(OriginsConfig.INSTANCE, ServerConfigManager.PermissionChecker.IS_OPERATOR);
         ModItems.register(bus);
         OriginsAttachments.REGISTRY.register(bus);
@@ -632,7 +700,9 @@ public final class Origins {
         RegularPowers.REGISTRY.register(bus);
         //Power Components
         BuiltinComponents.REGISTRY.register(bus);
-
+        container.registerConfig(net.neoforged.fml.config.ModConfig.Type.SERVER, com.iafenvoy.origins.border.BorderConfig.SPEC, "origins-server.toml");
 
     }
 }
+
+

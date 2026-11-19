@@ -22,7 +22,6 @@ public class ExhaustionEffect extends MobEffect {
 
     @Override
     public boolean applyEffectTick(LivingEntity entity, int amplifier) {
-        DamageSource customSource = entity.level().damageSources().source(EXHAUSTION);
 
 
         return true;

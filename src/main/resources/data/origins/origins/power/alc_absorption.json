@@ -1,9 +1,11 @@
 {
-  "type": "origins:attribute",
-  "modifier": {
-    "attribute": "minecraft:generic.max_absorption",
-    "value": 20.0,
-    "operation": "add_value"
+  "type": "origins:action_over_time",
+  "interval": 100,
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "attribute @s minecraft:generic.max_absorption modifier add alc 20 add_value",
+    "permission_level": 4
   },
-  "hidden": true
+  "name": "За счёт заведения",
+  "description": "Профессионализм, который вы проявляете при готовке зелий, даёт вам помимо эффектов здоровье"
 }

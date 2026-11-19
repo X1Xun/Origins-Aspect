@@ -1,0 +1,12 @@
+{
+  "border_ambient": {
+    "category": "music",
+    "subtitle": "subtitles.origins.border_music",
+    "sounds": [
+      {
+        "name": "origins:ambient/border_music",
+        "stream": true
+      }
+    ]
+  }
+}

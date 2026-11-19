@@ -1,0 +1,23 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "origins:giant",
+        "processors": "origins:ignore_air",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "origins:giant2",
+        "processors": "origins:ignore_air",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ]
+}

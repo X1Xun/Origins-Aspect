@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:totem_elf",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92015,
+    "spacing": 63,
+    "separation": 20,
+    "spread_type": "triangular"
+  }
+}

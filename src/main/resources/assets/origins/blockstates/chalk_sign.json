@@ -1,0 +1,9 @@
+{
+  "variants": {
+    "rune_type=0": { "model": "origins:block/chalk_rune_0" },
+    "rune_type=1": { "model": "origins:block/chalk_rune_1" },
+    "rune_type=2": { "model": "origins:block/chalk_rune_2" },
+    "rune_type=3": { "model": "origins:block/chalk_rune_3" },
+    "rune_type=4": { "model": "origins:block/chalk_rune_4" }
+  }
+}

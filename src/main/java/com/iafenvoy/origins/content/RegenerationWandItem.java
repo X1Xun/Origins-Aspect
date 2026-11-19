@@ -19,6 +19,7 @@ public class RegenerationWandItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
+        player.getCooldowns().addCooldown(this, 2400);
         if (!level.isClientSide()) {
             RegenCloudEntity cloud = new RegenCloudEntity(level, player.getX(), player.getY(), player.getZ());
 
@@ -33,6 +34,7 @@ public class RegenerationWandItem extends Item {
                     SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.0F, 1.2F);
             level.playSound(null, player.getX(), player.getY(), player.getZ(),
                     SoundEvents.EXPERIENCE_ORB_PICKUP, SoundSource.PLAYERS, 0.8F, 0.5F);
+
         }
 
         return InteractionResultHolder.success(itemStack);

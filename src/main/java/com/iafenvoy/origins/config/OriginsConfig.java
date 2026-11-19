@@ -22,6 +22,7 @@ public class OriginsConfig extends AutoInitConfigContainer {
         public final BooleanEntry compactUsabilityHints = BooleanEntry.builder("config.origins.general.compactUsabilityHints", false).key("compactUsabilityHints").build();
         public final IntegerEntry hudOffsetX = IntegerEntry.builder("config.origins.general.hudOffsetX", 0).key("hudOffsetX").build();
         public final IntegerEntry hudOffsetY = IntegerEntry.builder("config.origins.general.hudOffsetY", 0).key("hudOffsetY").build();
+        public final BooleanEntry showUI = BooleanEntry.builder("config.origins.general.showUI", true).key("showUI").build();
 
         public General() {
             super("general", "category.origins.general.title");

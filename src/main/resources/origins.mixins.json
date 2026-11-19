@@ -66,7 +66,6 @@
     "ElytraLayerMixin",
     "Entity$ClientMixin",
     "EntityRenderDispatcherMixin",
-    "FogRendererMixin",
     "GameRendererMixin",
     "GuiMixin",
     "LevelRendererMixin",

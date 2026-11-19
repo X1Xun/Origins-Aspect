@@ -1,0 +1,9 @@
+{
+  "multipart": [
+    {   "apply": { "model": "origins:block/witch_salt_dot" } },
+    {   "when": { "north": "true" }, "apply": { "model": "origins:block/witch_salt_side" } },
+    {   "when": { "east": "true" },  "apply": { "model": "origins:block/witch_salt_side", "y": 90 } },
+    {   "when": { "south": "true" }, "apply": { "model": "origins:block/witch_salt_side", "y": 180 } },
+    {   "when": { "west": "true" },  "apply": { "model": "origins:block/witch_salt_side", "y": 270 } }
+  ]
+}

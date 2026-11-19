@@ -2,12 +2,15 @@ package com.iafenvoy.origins.content;
 
 import com.iafenvoy.origins.Origins; // Убедитесь, что здесь правильный импорт класса вашего мода
 import com.iafenvoy.origins.data.power.builtin.regular.WarlockMainPower.warlock_powers;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Tiers;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
+
+import java.util.function.Supplier;
 
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(Origins.MOD_ID);
@@ -36,21 +39,41 @@ public class ModItems {
     public static final DeferredHolder<Item, Item> GRUME = ITEMS.register("grume",
             () -> new Item(new Item.Properties()));
 
+    public static final DeferredHolder<Item, CloverItem> CLOVER = ITEMS.register("clover",
+            () -> new CloverItem(new Item.Properties(), 10));
+
+    public static final DeferredHolder<Item, Item> TREFOIL = ITEMS.register("trefoil",
+            () -> new Item(new Item.Properties()));
+
+    public static final DeferredHolder<Item, Item> CLOUD_IN_BOTTLE = ITEMS.register("cloud_in_bottle",
+            () -> new Item(new Item.Properties()));
+
     public static final DeferredItem<Item> RITUAL_KNIFE = ITEMS.register("ritual_knife",
             () -> new RitualKnifeItem(Tiers.IRON, new Item.Properties()
                     .durability(64)
         )
     );
+
+    public static final DeferredHolder<Item, Item> PHANTOM_BLOOD_TOTEM = ITEMS.register("phantom_blood_totem",
+            () -> new Item(new Item.Properties().stacksTo(1)));
+
     public static final DeferredItem<Item> REGENERATION_WAND = ITEMS.register("regeneration_wand",
             () -> new RegenerationWandItem(new Item.Properties())
     );
+    public static final Supplier<Item> WITCH_SALT = ITEMS.register("salt",
+            () -> new BlockItem(ModBlocks.WITCH_SALT_WIRE.get(), new Item.Properties()));
 
+    public static final DeferredItem<Item> VERDANT = ITEMS.register("verdant",
+            () -> new Item(new Item.Properties()));
+
+    public static final DeferredItem<Item> VERDANT_COATED_IRON = ITEMS.register("verdant_coated_iron",
+            () -> new Item(new Item.Properties()));
 
 
     public static final java.util.function.Supplier<Item> GRAPPLING_HOOK = ITEMS.registerItem(
             "grappling_hook",
             GrapplingHook::new,
-            new Item.Properties().stacksTo(1)
+            new Item.Properties().stacksTo(1).durability(154)
     );
     public static final DeferredHolder<Item, ExplosiveArrowItem> EXPLOSIVE_ARROW_ITEM = ITEMS.register("explosive_arrow",
             () -> new ExplosiveArrowItem(new Item.Properties())
@@ -61,8 +84,9 @@ public class ModItems {
     public static final DeferredHolder<Item, BlueprintItem> RITUAL_KNIFE_BLUEPRINT = ITEMS.register("ritual_knife_blueprint",
             () -> new BlueprintItem(new Item.Properties().stacksTo(1), "ritual_knife"));
 
-    public static final DeferredHolder<Item, BlueprintItem> EXPLOSIVE_ARROW_BLUEPRINT = ITEMS.register("explosive_arrow_blueprint",
-            () -> new BlueprintItem(new Item.Properties().stacksTo(1), "explosive_arrow"));
+    public static final Supplier<Item> MAGIC_CHALK = ITEMS.register("chalk",
+            () -> new ChalkItem(new Item.Properties().stacksTo(1).durability(64)));
+
     public static void register(IEventBus modEventBus) {
         ITEMS.register(modEventBus);
     }

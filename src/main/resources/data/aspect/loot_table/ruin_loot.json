@@ -1,0 +1,96 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "min": 2,
+        "max": 8
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "origins:chalk",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.5
+            }
+          ],
+          "functions": []
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:candle",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.1
+            }
+          ],
+          "functions": []
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:gold_ingot",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:prismarine_crystals",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:iron_ingot",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:cobweb",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "origins:scroll_of_pillager",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.4
+            }
+          ],
+          "functions": []
+        },
+        {
+          "type": "minecraft:item",
+          "name": "origins:grappling_hook",
+          "weight": 1,
+          "quality": 6,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.5
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "brewinandchewin:mead",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 0,
+                "max": 3
+              },
+              "add": true
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

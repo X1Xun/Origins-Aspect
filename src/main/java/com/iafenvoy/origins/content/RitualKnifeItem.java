@@ -40,7 +40,7 @@ public class RitualKnifeItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         ItemStack itemStack = player.getItemInHand(hand);
-        player.getCooldowns().addCooldown(this, 20);
+        player.getCooldowns().addCooldown(this, 3600);
         player.swing(hand);
         if (level instanceof ServerLevel serverLevel) {
             serverLevel.playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -71,7 +71,6 @@ public class RitualKnifeItem extends Item {
                         player.sendSystemMessage(Component.literal("Внимание! Следующее использование кинжала приведёт к мгновенной смерти!"));
                     }
                 }
-                player.sendSystemMessage(net.minecraft.network.chat.Component.literal("Уровень крови: " + nextBloodLvl));
 
             } catch (Exception e) {
                 player.sendSystemMessage(net.minecraft.network.chat.Component.literal("§c[Ошибка мода]: Проблема с Attachment!"));

@@ -19,7 +19,6 @@ public class ModItemModelProvider extends ItemModelProvider {
         ResourceLocation baseTexture = ResourceLocation.fromNamespaceAndPath("origins", "item/blueprint_base");
         DeferredHolder<Item, ?>[] blueprints = new DeferredHolder[]{
                 ModItems.GRAPPLING_HOOK_BLUEPRINT,
-                ModItems.EXPLOSIVE_ARROW_BLUEPRINT
         };
 
         for (DeferredHolder<Item, ?> blueprint : blueprints) {

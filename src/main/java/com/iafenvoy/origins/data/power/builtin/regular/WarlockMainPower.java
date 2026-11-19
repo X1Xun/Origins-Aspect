@@ -199,7 +199,7 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         serverLevel.playSound(null, entity.getX(), entity.getY(), entity.getZ(),
                                 net.minecraft.sounds.SoundEvents.BONE_MEAL_USE, net.minecraft.sounds.SoundSource.PLAYERS, 1.0F, 1.0F);
 
-                        currentCooldownTicks = 600;
+                        currentCooldownTicks = 800;
                     }
                     //драконья. не сделана. вроде её вырезать надо.
                     case DRAGON -> {
@@ -229,7 +229,7 @@ public class WarlockMainPower extends HasCooldownPower implements Toggleable {
                         if (hit instanceof net.minecraft.world.phys.EntityHitResult entityHit) {
                             net.minecraft.world.entity.Entity target = entityHit.getEntity();
 
-                            target.hurt(serverLevel.damageSources().sonicBoom(entity), 20.0F);
+                            target.hurt(serverLevel.damageSources().sonicBoom(entity), 12.0F);
 
                             target.setDeltaMovement(target.getDeltaMovement().add(lookDir.x * 1.5D, 0.5D, lookDir.z * 1.5D));
                             target.hurtMarked = true;

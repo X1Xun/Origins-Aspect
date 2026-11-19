@@ -1,0 +1,88 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "min": 4,
+        "max": 7
+      },
+      "bonus_rolls": {
+        "min": 0,
+        "max": 8
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "brewinandchewin:beer",
+          "weight": 3
+        },
+        {
+          "type": "minecraft:item",
+          "name": "brewinandchewin:mead",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "brewinandchewin:vodka",
+          "weight": 1
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bread",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 14
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:hamburger",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 14
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:smoked_ham",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 14
+              }
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "farmersdelight:beef_patty",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 3,
+                "max": 14
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

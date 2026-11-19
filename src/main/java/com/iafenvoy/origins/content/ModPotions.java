@@ -19,6 +19,12 @@ public class ModPotions {
             () -> new Potion("stronger_leaping", new MobEffectInstance(MobEffects.JUMP, 1800, 2)));
     public static final DeferredHolder<Potion, Potion> SWIFTNESS_3 = POTIONS.register("stronger_swiftness",
             () -> new Potion("stronger_swiftness", new MobEffectInstance(MobEffects.MOVEMENT_SPEED, 1800, 2)));
+    public static final DeferredHolder<Potion, Potion> HIGH_GRAVITY = POTIONS.register("high_gravity",
+            () -> new Potion("high_gravity", new MobEffectInstance(ModEffects.HIGH_GRAVITY, 3600, 0)));
+    public static final DeferredHolder<Potion, Potion> LOW_GRAVITY = POTIONS.register("low_gravity",
+            () -> new Potion("low_gravity", new MobEffectInstance(ModEffects.LOW_GRAVITY, 3600, 0)));
+    public static final DeferredHolder<Potion, Potion> NO_GRAVITY = POTIONS.register("no_gravity",
+            () -> new Potion("no_gravity", new MobEffectInstance(ModEffects.LOW_GRAVITY, 440, 1)));
     public static void register(IEventBus eventBus) {
         POTIONS.register(eventBus);
     }

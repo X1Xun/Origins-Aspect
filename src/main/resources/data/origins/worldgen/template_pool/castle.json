@@ -1,0 +1,32 @@
+{
+  "fallback": "minecraft:empty",
+  "elements": [
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "origins:castle_1",
+        "processors": "origins:ignore_air",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "origins:castle_2",
+        "processors": "origins:ignore_air",
+        "projection": "rigid"
+      },
+      "weight": 1
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "origins:castle_3",
+        "processors": "origins:ignore_air",
+        "projection": "rigid"
+      },
+      "weight": 1
+    }
+  ]
+}

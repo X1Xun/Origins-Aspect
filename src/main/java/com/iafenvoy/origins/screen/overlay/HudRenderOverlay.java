@@ -32,6 +32,7 @@ public enum HudRenderOverlay implements LayeredDraw.Layer {
 
     @Override
     public void render(@NotNull GuiGraphics graphics, @NotNull DeltaTracker deltaTracker) {
+        if (OriginsConfig.INSTANCE.general.showUI.getValue() == false) return;
         Minecraft minecraft = Minecraft.getInstance();
         Player player = minecraft.player;
         if (minecraft.options.hideGui || player == null) return;

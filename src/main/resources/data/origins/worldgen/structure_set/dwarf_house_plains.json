@@ -1,0 +1,15 @@
+{
+  "structures": [
+    {
+      "structure": "origins:dwarf_house_plains",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92013,
+    "spacing": 44,
+    "separation": 15,
+    "spread_type": "triangular"
+  }
+}

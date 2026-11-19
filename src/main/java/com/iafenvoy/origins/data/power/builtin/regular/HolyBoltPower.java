@@ -1,7 +1,9 @@
 package com.iafenvoy.origins.data.power.builtin.regular;
 
 import com.google.common.collect.ImmutableSet;
+import com.iafenvoy.origins.ModMethods;
 import com.iafenvoy.origins.attachment.OriginDataHolder;
+import com.iafenvoy.origins.content.ModEffects;
 import com.iafenvoy.origins.data._common.KeySettings;
 import com.iafenvoy.origins.data.badge.Badge;
 import com.iafenvoy.origins.data.badge.PresetBadges;
@@ -20,6 +22,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -81,7 +84,14 @@ public class HolyBoltPower extends HasCooldownPower implements Toggleable {
                         lightning.setVisualOnly(true);
                         serverLevel.addFreshEntity(lightning);
                     }
+                    boolean hasGrume = ModMethods.isGrumeInHotbar((Player) paladin);
                     boolean isUndead = target.isInvertedHealAndHarm();
+
+                    if (hasGrume) {
+                        target.hurt(paladin.damageSources().magic(), (float) (this.damage * 2.0D));
+                        target.addEffect(new MobEffectInstance(ModEffects.EXHAUSTION, 200, 2, false, false ));
+                        target.addEffect(new MobEffectInstance(ModEffects.BLOOD, 100, 0));
+                    }
 
                     if (isUndead) {
                         target.hurt(paladin.damageSources().magic(), (float) (this.damage * 3.0D));

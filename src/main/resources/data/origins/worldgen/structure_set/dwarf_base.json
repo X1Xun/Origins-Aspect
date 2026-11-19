@@ -1,0 +1,17 @@
+{
+  "structures": [
+    {
+      "structure": "origins:dwarf_base",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 92011,
+    "spacing": 100,
+    "separation": 20,
+    "spread_type": "triangular",
+    "frequency": 0.02,
+    "frequency_reduction_method": "default"
+  }
+}

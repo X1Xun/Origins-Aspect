@@ -1,0 +1,66 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "min": 2,
+        "max": 4
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:rotten_flesh",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 4
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:bone",
+          "weight": 2,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 2,
+                "max": 5
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "origins:ritual_knife_blueprint",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.2
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "origins:grappling_hook_blueprint",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.1
+            }
+          ],
+          "functions": []
+        }
+      ]
+    }
+  ]
+}

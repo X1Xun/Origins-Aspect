@@ -13,5 +13,9 @@
   "key": {
     "key": "key.origins.secondary_active",
     "continuous": false
+  },
+  "display": {
+    "name": "Телепортация обыкновенная",
+    "description": "Вы способны телепортироваться по линии взгляда."
   }
 }

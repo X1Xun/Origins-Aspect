@@ -1,0 +1,88 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": {
+        "min": 3,
+        "max": 8
+      },
+      "bonus_rolls": {
+        "min": 3,
+        "max": 8
+      },
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:enchanted_book",
+          "weight": 1,
+          "functions": [
+            {
+              "function": "minecraft:enchant_randomly",
+              "options": [
+                "minecraft:wind_burst",
+                "minecraft:breach",
+                "minecraft:aqua_affinity",
+                "minecraft:fire_aspect",
+                "minecraft:power",
+                "minecraft:vanishing_curse",
+                "minecraft:swift_sneak",
+                "minecraft:luck_of_the_sea"
+              ]
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "origins:scroll_of_infernal",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.05
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "origins:scroll_of_wind",
+          "weight": 1,
+          "conditions": [
+            {
+              "condition": "minecraft:random_chance",
+              "chance": 0.05
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "book",
+          "weight": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 4
+              },
+              "add": false
+            }
+          ]
+        },
+        {
+          "type": "minecraft:item",
+          "name": "paper",
+          "quality": 7,
+          "functions": [
+            {
+              "function": "minecraft:set_count",
+              "count": {
+                "min": 1,
+                "max": 4
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

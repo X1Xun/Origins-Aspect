@@ -1,6 +1,5 @@
 {
 	"powers": [
-		"origins:ran_fall",
 		"origins:ran_lunge",
 		"origins:ran_speed",
 		"origins:ran_prevent_traps",

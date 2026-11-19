@@ -1,10 +1,11 @@
 {
-  "type": "origins:attribute",
-  "modifier": {
-    "attribute": "minecraft:generic.max_health",
-    "value": 12.0,
-    "operation": "add_value"
+  "type": "origins:action_over_time",
+  "interval": 100,
+  "entity_action": {
+    "type": "origins:execute_command",
+    "command": "attribute @s minecraft:generic.max_health modifier add bar 12 add_value",
+    "permission_level": 4
   },
-  "name": "Крепкое здоровье",
-  "description": "Ваш организм гораздо выносливее обычного, что дает вам 6 дополнительных сердец."
+  "name": "Богатырь",
+  "description": "Ваш показатель здоровья значительно выше других"
 }
